@@ -18,10 +18,34 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Dashboard",
+          title: "Home",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="dataSiswa"
+        options={{
+          title: "User",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "person" : "person-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="catatan"
+        options={{
+          title: "Catatan",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "pencil" : "pencil-outline"}
               color={color}
             />
           ),

@@ -2,29 +2,20 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  View,
-  Image,
+  TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
-const PresensiMasuk = () => {
+const catatan = () => {
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
-        <Image
-          source={require("../assets/images/logo_smk-removebg-preview.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.textHeader}>PRESENSI</Text>
+        <Text style={styles.textHeader}>CATATAN PRESENSI</Text>
       </View>
-
-      <View style={styles.welcome}>
-        <Text style={styles.welcomeText}>Masuk</Text>
-      </View>
-
       <View style={styles.infoContainer}>
         <View style={styles.row}>
           <View style={styles.body}>
@@ -44,31 +35,26 @@ const PresensiMasuk = () => {
           </View>
         </View>
       </View>
-
-      <View style={styles.statusContainer}>
-        <TouchableOpacity style={styles.statusButton}>
-          <Text style={styles.statusButtonText}>H</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.statusButton}>
-          <Text style={styles.statusButtonText}>I</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.statusButton}>
-          <Text style={styles.statusButtonText}>S</Text>
-        </TouchableOpacity>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Catatan Materi Jam (1-4):</Text>
+        <TextInput style={styles.input} placeholder="Masukkan catatan..." />
       </View>
-
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Catatan Materi Jam (5-10):</Text>
+        <TextInput style={styles.input} placeholder="Masukkan catatan..." />
+      </View>
       <TouchableOpacity
         style={styles.presenceButton}
-        onPress={() => router.push("/(tabs)catatan")}
+        onPress={() => router.push("/presensiPulang")}
       >
         <Ionicons name="create-outline" size={20} color="white" />
-        <Text style={styles.presenceButtonText}>CATATAN PRESENSI</Text>
+        <Text style={styles.presenceButtonText}>PRESENSI PULANG</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
-export default PresensiMasuk;
+export default catatan;
 
 const styles = StyleSheet.create({
   Container: {
@@ -76,36 +62,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
   header: {
-    flexDirection: "row",
     marginTop: 15,
+    alignItems: "center",
   },
   textHeader: {
     fontSize: 28,
     color: "black",
     fontWeight: "bold",
     justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 20,
-    marginRight: 80,
-    marginLeft: 20,
-  },
-  welcome: {
-    marginTop: 25,
-    marginLeft: 25,
-  },
-  welcomeText: {
-    gap: 8,
-    marginBottom: 8,
-    fontSize: 36,
-    fontWeight: "bold",
   },
   infoContainer: {
     marginHorizontal: 25,
     marginBottom: 30,
+    marginTop: 25,
   },
   row: {
     marginTop: 20,
@@ -131,24 +102,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "black",
   },
-  statusContainer: {
-    marginTop: 50,
-    flexDirection: "row",
-    marginBottom: 20,
-    marginHorizontal: "auto",
-  },
-  statusButton: {
-    backgroundColor: "#000",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginHorizontal: 5,
-  },
-  statusButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
   presenceButton: {
     flexDirection: "row",
     marginTop: 15,
@@ -165,5 +118,28 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     marginLeft: 8,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: "black",
+    marginBottom: 10,
+    marginLeft: 25,
+  },
+  input: {
+    marginHorizontal: "auto",
+    height: 70,
+    width: 370,
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5, // Untuk efek bayangan di Android
   },
 });

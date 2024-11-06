@@ -10,7 +10,7 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
-const PresensiMasuk = () => {
+const PresensiPulang = () => {
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -22,7 +22,7 @@ const PresensiMasuk = () => {
       </View>
 
       <View style={styles.welcome}>
-        <Text style={styles.welcomeText}>Masuk</Text>
+        <Text style={styles.welcomeText}>Pulang</Text>
       </View>
 
       <View style={styles.infoContainer}>
@@ -68,7 +68,7 @@ const PresensiMasuk = () => {
   );
 };
 
-export default PresensiMasuk;
+export default PresensiPulang;
 
 const styles = StyleSheet.create({
   Container: {
