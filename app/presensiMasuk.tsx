@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const PresensiMasuk = () => {
   return (
@@ -24,16 +25,24 @@ const PresensiMasuk = () => {
         <Text style={styles.welcomeText}>Masuk</Text>
       </View>
 
-      <View style={styles.body}>
-        <Text style={styles.infoText}>
-          Nama: <Text style={styles.boldText}>Nama Siswa</Text>
-        </Text>
-        <Text style={styles.infoText}>
-          Kelas: <Text style={styles.boldText}>Kelas Siswa</Text>
-        </Text>
-        <Text style={styles.infoText}>
-          Status: <Text style={styles.boldText}>-</Text>
-        </Text>
+      <View style={styles.infoContainer}>
+        <View style={styles.row}>
+          <View style={styles.body}>
+            <Text style={styles.infoText}>Nama</Text>
+            <Text style={styles.separator}>:</Text>
+            <Text style={styles.isiText}>Estri Handayani</Text>
+          </View>
+          <View style={styles.body}>
+            <Text style={styles.infoText}>Kelas</Text>
+            <Text style={styles.separator}>:</Text>
+            <Text style={styles.isiText}>X RPL B</Text>
+          </View>
+          <View style={styles.body}>
+            <Text style={styles.infoText}>Status</Text>
+            <Text style={styles.separator}>:</Text>
+            <Text style={styles.isiText}>Hadir</Text>
+          </View>
+        </View>
       </View>
 
       <View style={styles.statusContainer}>
@@ -48,7 +57,10 @@ const PresensiMasuk = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.presenceButton}>
+      <TouchableOpacity
+        style={styles.presenceButton}
+        onPress={() => router.push("/(tabs)catatan")}
+      >
         <Ionicons name="create-outline" size={20} color="white" />
         <Text style={styles.presenceButtonText}>CATATAN PRESENSI</Text>
       </TouchableOpacity>
@@ -91,20 +103,36 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: "bold",
   },
+  infoContainer: {
+    marginHorizontal: 25,
+    marginBottom: 30,
+  },
+  row: {
+    marginTop: 20,
+  },
   body: {
-    marginTop: 25,
-    marginLeft: 25,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
   infoText: {
-    fontSize: 26,
-    marginTop: 10,
-  },
-  boldText: {
+    fontSize: 20,
     fontWeight: "bold",
-    fontSize: 24,
+    width: 80,
+    color: "black",
+  },
+  separator: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "black",
+    marginRight: 5,
+  },
+  isiText: {
+    fontSize: 20,
+    color: "black",
   },
   statusContainer: {
-    marginTop: 70,
+    marginTop: 50,
     flexDirection: "row",
     marginBottom: 20,
     marginHorizontal: "auto",
@@ -125,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 15,
     alignItems: "center",
-    backgroundColor: "#00C853",
+    backgroundColor: "#40E9AE",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 5,

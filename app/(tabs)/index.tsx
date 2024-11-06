@@ -21,11 +21,17 @@ const Index = () => {
         <Text style={styles.username}>Estri Handayani</Text>
       </View>
       <View style={styles.buttonBody}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/dataSiswa")}
+        >
           <Text style={styles.buttonText}> Data Siswa</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/jadwalPelajaran")}
+        >
           <Text style={styles.buttonText}> Jadwal Pelajaran</Text>
         </TouchableOpacity>
 
@@ -33,7 +39,7 @@ const Index = () => {
           style={styles.button}
           onPress={() => router.push("/presensiMasuk")}
         >
-          <Text style={styles.buttonText}> Presensi</Text>
+          <Text style={styles.buttonText}> Presensi Masuk</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
