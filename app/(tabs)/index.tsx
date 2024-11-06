@@ -1,70 +1,95 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import axios from "axios";
+import { Redirect } from "expo-router";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function HomeScreen() {
+const Index = () => {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
+    <SafeAreaView style={styles.Container}>
+      <View style={styles.header}>
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require("../../assets/images/logo_smk-removebg-preview.png")}
+          style={styles.logo}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <Text style={styles.textHeader}>DASHBOARD</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.welcomeText}>Selamat Datang,</Text>
+        <Text style={styles.username}>Estri Handayani</Text>
+      </View>
+      <View style={styles.buttonBody}>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}> Data Siswa</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}> Jadwal Pelajaran</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}> Presensi</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
-}
+};
+
+export default Index;
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  Container: {
+    flex: 1,
+    backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
-  stepContainer: {
+  header: {
+    flexDirection: "row",
+    marginTop: 15,
+  },
+  textHeader: {
+    fontSize: 28,
+    color: "black",
+    fontWeight: "bold",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginBottom: 20,
+    marginRight: 60,
+    marginLeft: 20,
+  },
+  body: {
+    marginTop: 50,
+    marginLeft: 25,
+  },
+  username: {
     gap: 8,
     marginBottom: 8,
+    fontSize: 32,
+    fontWeight: "bold",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  welcomeText: {
+    fontSize: 22,
+    color: "#000",
+  },
+  buttonBody: {
+    marginTop: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%", // Lebar penuh agar bisa memusatkan tombol
+  },
+  button: {
+    backgroundColor: "#fbb03b", // Warna kuning pada tombol
+    width: "85%",
+    padding: 25,
+    borderRadius: 10,
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: "#fff",
   },
 });
