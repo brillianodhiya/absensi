@@ -1,10 +1,12 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import axios from "axios";
-import { Redirect } from "expo-router";
+import { Link, router, useNavigation } from "expo-router";
+// import axios from "axios";
+// import {  } from "expo-router";
 
 const Index = () => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -27,7 +29,10 @@ const Index = () => {
           <Text style={styles.buttonText}> Jadwal Pelajaran</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/presensiMasuk")}
+        >
           <Text style={styles.buttonText}> Presensi</Text>
         </TouchableOpacity>
       </View>
