@@ -18,6 +18,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="home"
+        options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
@@ -27,7 +33,20 @@ export default function TabLayout() {
           ),
         }}
       />
-      
+
+      <Tabs.Screen
+        name="dashboard"
+        options={{
+          title: "Dashboard",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "home" : "home-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="kelas"
         options={{
@@ -43,10 +62,22 @@ export default function TabLayout() {
       <Tabs.Screen
         name="dataSiswa"
         options={{
-          title: "Data Siswa",
+          title: "User",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "accessibility" : "accessibility"}
+              name={focused ? "person" : "person-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="dataSiswa2"
+        options={{
+          title: "User",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "accessibility" : "accessibility-outline"}
               color={color}
             />
           ),
@@ -59,6 +90,18 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "today-outline" : "today-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="catatan"
+        options={{
+          title: "Catatan",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "pencil" : "pencil-outline"}
               color={color}
             />
           ),
