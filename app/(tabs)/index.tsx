@@ -30,11 +30,11 @@ const dashboardUser = () => {
           <Text style={styles.buttonText}>🧑‍🎓 Data Siswa</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/jadwal")}>
           <Text style={styles.buttonText}>📅 Jadwal Pelajaran</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/presensi")}>
           <Text style={styles.buttonText}>📝 Presensi</Text>
         </TouchableOpacity>
 
@@ -43,12 +43,12 @@ const dashboardUser = () => {
         </TouchableOpacity>
 
         {/* Tombol Rekap Masuk */}
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>📝🕒 Rekap Masuk</Text>
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/rekapmasuk")}>
+          <Text style={styles.buttonText}>📝 Rekap Masuk</Text>
         </TouchableOpacity>
 
         {/* Tombol Rekap Pulang */}
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/rekappulang")}>
           <Text style={styles.buttonText}>🏠 Rekap Pulang</Text>
         </TouchableOpacity>
       </View>
