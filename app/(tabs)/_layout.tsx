@@ -8,6 +8,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+  // get profile
+  // get role
   return (
     <Tabs
       screenOptions={{
@@ -19,8 +21,12 @@ export default function TabLayout() {
         name="index"
         options={{
           href: null,
+          tabBarStyle: {
+            display: "none",
+          },
         }}
       />
+
       <Tabs.Screen
         name="home"
         options={{
