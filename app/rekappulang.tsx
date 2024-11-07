@@ -1,66 +1,101 @@
 import {
+    FlatList,
+    SafeAreaView,
     StyleSheet,
     Text,
     TextInput,
-    View,
-    Image,
-    SafeAreaView,
     TouchableOpacity,
-    FlatList,
+    View,
   } from "react-native";
   import React from "react";
   import { Ionicons } from "@expo/vector-icons";
+  const data = [
+    { name: "Nama Siswa", status: "Hadir" },
+    { name: "Nama Siswa", status: "Sakit" },
+    { name: "Nama Siswa", status: "Izin" },
+    { name: "Nama Siswa", status: "Alfa" },
+  ];
   
-  const rekapmasuk = () => {
+  // Status colors based on type
+  const statusColors = {
+    Hadir: "#00d084",
+    Sakit: "#ff6900",
+    Izin: "#fcb900",
+    Alfa: "#00bcd4",
+  };
+  const RekapData = () => {
+    const renderItem = ({ item }) => (
+      <View style={styles.itemContainer}>
+        <View>
+          <Text style={styles.nameText}>{item.name}</Text>
+        </View>
+        <View
+          style={[
+            styles.statusContainer,
+            { backgroundColor: statusColors[item.status] },
+          ]}
+        >
+          <Text style={styles.statusText}>{item.status}</Text>
+        </View>
+      </View>
+    );
+  
     return (
       <SafeAreaView style={styles.Container}>
-        {/* Header dengan logo dan judul */}
         <View style={styles.header}>
-          <Image
-            source={require("../assets/images/logosmk2.png")}
-            style={styles.logo}
-          />
-          <Text style={styles.textHeader}>REKAP ABSEN PULANG</Text>
+          <Text style={styles.textHeader}>Rekap Data</Text>
         </View>
-  
-        <View style={styles.container}>
+        <View style={styles.infoContainer}>
           <View style={styles.row}>
-            <Text style={styles.label}>Nama </Text>
-            <Text style={styles.separator}>:</Text>
-            {/* <Text style={styles.value}>{data.hari}</Text> */}
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Keterangan</Text>
-            <Text style={styles.separator}>:</Text>
-            {/* <Text style={styles.value}>{data.tanggal}</Text> */}
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Kelas</Text>
-            <Text style={styles.separator}>:</Text>
-            {/* <Text style={styles.value}>{data.kelas}</Text> */}
-          </View>
-          <View style={styles.container}>
-            {/* Search and Filter Section */}
-            <View style={styles.searchContainer}>
-              <TextInput style={styles.searchInput} placeholder="Search" />
-              <Ionicons
-                name="search"
-                size={20}
-                color="#fff"
-                style={styles.searchIcon}
-              />
-              <TouchableOpacity style={styles.filterButton}>
-                <Ionicons name="filter" size={20} color="#4CAF50" />
-                <Text style={styles.filterText}>Filter</Text>
-              </TouchableOpacity>
+            <View style={styles.body}>
+              <Text style={styles.infoText}>Hari</Text>
+              <Text style={styles.separator}>:</Text>
+              <Text style={styles.isiText}>Senin</Text>
+            </View>
+            <View style={styles.body}>
+              <Text style={styles.infoText}>Tanggal</Text>
+              <Text style={styles.separator}>:</Text>
+              <Text style={styles.isiText}>31-6-2025</Text>
+            </View>
+            <View style={styles.body}>
+              <Text style={styles.infoText}>Kelas</Text>
+              <Text style={styles.separator}>:</Text>
+              <Text style={styles.isiText}>X RPL B</Text>
             </View>
           </View>
         </View>
+        <View style={styles.header2}>
+          <View style={styles.searchBox}>
+            <TextInput
+              placeholder="Search"
+              placeholderTextColor="white"
+              style={styles.searchInput}
+            />
+            <Ionicons
+              name="search"
+              size={20}
+              color="white"
+              style={styles.searchIcon}
+            />
+          </View>
+  
+          {/* Filter Button */}
+          <TouchableOpacity style={styles.filterButton}>
+            <Ionicons name="filter" size={20} color="#00C853" />
+            <Text style={styles.filterText}>Filter</Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.listContainer}
+        />
       </SafeAreaView>
     );
   };
   
-  export default rekapmasuk;
+  export default RekapData;
   
   const styles = StyleSheet.create({
     Container: {
@@ -68,110 +103,108 @@ import {
       backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
     },
     header: {
-      flexDirection: "row",
+      marginTop: 15,
+      alignItems: "center",
     },
     textHeader: {
-      fontSize: 20,
+      fontSize: 28,
       color: "black",
       fontWeight: "bold",
       justifyContent: "center",
-      marginTop: 6,
+      alignItems: "center",
+      marginTop: 10,
     },
-    logo: {
-      width: 50,
-      height: 50,
-      marginBottom: 10,
-      marginRight: 60,
-      marginLeft: 20,
-    },
-  
-    container: {
-      flex: 1,
-      padding: 10,
+    infoContainer: {
+      marginHorizontal: 25,
+      marginBottom: 30,
+      marginTop: 25,
     },
     row: {
+      marginTop: 20,
+    },
+    body: {
       flexDirection: "row",
       alignItems: "center",
-      paddingVertical: 5,
+      marginBottom: 10,
     },
-    label: {
-      fontSize: 16,
-      width: 70, // Tentukan lebar agar semua label rata
+    infoText: {
+      fontSize: 20,
       fontWeight: "bold",
-      color: "#000",
+      width: 80,
+      color: "black",
     },
     separator: {
-      fontSize: 16,
-      paddingHorizontal: 5,
-      color: "#000",
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "black",
+      marginRight: 5,
     },
-    value: {
-      fontSize: 16,
-      color: "#000",
+    isiText: {
+      fontSize: 20,
+      color: "black",
     },
-    searchContainer: {
+    header2: {
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: 16,
-      backgroundColor: "#4CAF50",
-      borderRadius: 10,
-      paddingHorizontal: 10,
+      paddingHorizontal: 16,
+    },
+    searchBox: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "#2CE592",
+      borderRadius: 20,
+      paddingHorizontal: 15,
+      height: 40,
+      marginRight: 10,
     },
     searchInput: {
       flex: 1,
-      paddingVertical: 8,
-      paddingHorizontal: 8,
-      color: "#fff",
+      color: "white",
       fontSize: 16,
     },
     searchIcon: {
-      position: "absolute",
-      right: 50,
-      top: 10,
+      marginLeft: 5,
     },
     filterButton: {
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: "#E0F7FA",
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      borderRadius: 10,
-      marginLeft: 10,
+      borderWidth: 1,
+      borderColor: "#2CE592",
+      borderRadius: 20,
+      paddingHorizontal: 15,
+      height: 40,
     },
     filterText: {
-      color: "#4CAF50",
-      marginLeft: 4,
+      color: "#2CE592",
+      fontSize: 16,
+      marginLeft: 5,
     },
     listContainer: {
-      paddingBottom: 10,
+      padding: 16,
+      backgroundColor: "#d4f1f4", // Light blue background
     },
-    listItem: {
+    itemContainer: {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      backgroundColor: "#fff",
+      padding: 16,
+      marginVertical: 4,
       borderRadius: 10,
-      padding: 12,
-      marginBottom: 10,
-      borderWidth: 1,
-      borderColor: "#E0E0E0",
+      backgroundColor: "#e0f7fa",
     },
-    nama: {
+    nameText: {
       fontSize: 16,
       fontWeight: "bold",
-      color: "#000",
-    },
-    keterangan: {
-      fontSize: 14,
-      color: "#757575",
+      color: "#00796b",
     },
     statusContainer: {
       paddingVertical: 4,
-      paddingHorizontal: 10,
+      paddingHorizontal: 12,
       borderRadius: 20,
     },
     statusText: {
-      color: "#fff",
+      color: "white",
       fontWeight: "bold",
     },
   });

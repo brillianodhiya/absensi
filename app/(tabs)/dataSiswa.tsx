@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8f8f8",
     paddingLeft: 20,
     paddingRight: 20,
-    justifyContent:"center",
+    justifyContent: "center",
   },
   ListItem: {
     display: "flex",
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 30,
   },
   logo: {
     width: 50,
