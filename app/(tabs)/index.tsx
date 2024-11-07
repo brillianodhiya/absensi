@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import axios from "axios";
@@ -28,7 +29,9 @@ const Index = () => {
         }
       );
       if (response.status === 200) {
-        await localStorage.setItem("token", response.data.token);
+        // Simpan token di AsyncStorage
+        await AsyncStorage.setItem("token", response.data.token);
+        // Arahkan ke halaman home setelah login berhasil
         router.push("/(tabs)/home");
       }
     } catch (error) {

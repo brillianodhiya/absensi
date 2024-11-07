@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router, useNavigation } from "expo-router";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import axios from "axios";
 // import {  } from "expo-router";
 
@@ -15,7 +16,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [IsModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = AsyncStorage.getItem("token");
 
     if (!token) {
       setError("Token not found. Please login.");
