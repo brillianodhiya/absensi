@@ -59,7 +59,7 @@ const PresensiPulang = () => {
 
       <TouchableOpacity
         style={styles.presenceButton}
-        onPress={() => router.push("/(tabs)catatan")}
+        onPress={() => router.push("/catatan")}
       >
         <Ionicons name="create-outline" size={20} color="white" />
         <Text style={styles.presenceButtonText}>CATATAN PRESENSI</Text>
