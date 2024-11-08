@@ -24,7 +24,7 @@ import {
     Alfa: "#00bcd4",
   };
   const RekapData = () => {
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item }: { item: any }) => (
       <View style={styles.itemContainer}>
         <View>
           <Text style={styles.nameText}>{item.name}</Text>
