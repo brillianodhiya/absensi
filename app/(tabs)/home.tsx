@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = () => {
   const [userData, setUserData] = useState({
-    name: "",
+    nama: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ const Home = () => {
         })
         .then((response) => {
           setUserData({
-            name: response.data.data.username,
+            nama: response.data.data.nama,
           });
           setLoading(false);
         })
@@ -59,7 +59,7 @@ const Home = () => {
       </View>
       <View style={styles.body}>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
-        <Text style={styles.username}>{userData.name || "Username"}</Text>
+        <Text style={styles.username}>{userData.nama || "Nama User"}</Text>
       </View>
       <View style={styles.buttonBody}>
         <TouchableOpacity
