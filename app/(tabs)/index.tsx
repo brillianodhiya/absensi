@@ -14,7 +14,7 @@ import { router } from "expo-router";
 import axios from "axios";
 
 const Index = () => {
-  const [username, setUsername] = useState("");
+  const [nama, setNama] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState(null);
 
@@ -24,7 +24,7 @@ const Index = () => {
       const response = await axios.post(
         "https://px973nrz-3000.asse.devtunnels.ms/users/login",
         {
-          username: username,
+          nama: nama,
           password: password,
         }
       );
@@ -60,12 +60,12 @@ const Index = () => {
 
       <Text style={styles.title}>Login</Text>
 
-      <Text style={styles.label}>Username</Text>
+      <Text style={styles.label}>Nama</Text>
       <TextInput
         style={styles.input}
-        placeholder="Masukkan username"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="Masukkan Nama"
+        value={nama}
+        onChangeText={setNama}
       />
 
       <Text style={styles.label}>Password</Text>

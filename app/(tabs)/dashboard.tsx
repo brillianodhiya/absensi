@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 const dashboardUser = () => {
   const [userData, setUserData] = useState({
-    name: "",
+    nama: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ const dashboardUser = () => {
         })
         .then((response) => {
           setUserData({
-            name: response.data.data.username,
+            nama: response.data.data.nama,
           });
           setLoading(false);
         })
@@ -59,7 +59,7 @@ const dashboardUser = () => {
       </View>
       <View style={styles.body}>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
-        <Text style={styles.username}>{userData.name || "Username"}</Text>
+        <Text style={styles.username}>{userData.nama}</Text>
 
         <TouchableOpacity
           style={styles.button}
