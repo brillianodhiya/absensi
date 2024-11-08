@@ -1,9 +1,53 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 const dashboardUser = () => {
+  const [userData, setUserData] = useState({
+    name: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [IsModalOpen, setIsModalOpen] = useState(false);
+
+  const getData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      console.log(token);
+      if (!token) {
+        setError("Token not found. Please login.");
+        setLoading(false);
+        return;
+      }
+      axios
+        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUserData({
+            name: response.data.data.username,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setError("Failed to fetch user data.");
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -15,7 +59,7 @@ const dashboardUser = () => {
       </View>
       <View style={styles.body}>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
-        <Text style={styles.username}>Estri Handayani</Text>
+        <Text style={styles.username}>{userData.name || "Username"}</Text>
 
         <TouchableOpacity
           style={styles.button}
@@ -30,25 +74,40 @@ const dashboardUser = () => {
           <Text style={styles.buttonText}>🧑‍🎓 Data Siswa</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/jadwal")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/jadwal")}
+        >
           <Text style={styles.buttonText}>📅 Jadwal Pelajaran</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/presensi")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/presensi")}
+        >
           <Text style={styles.buttonText}>📝 Presensi</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/adminpresensi")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/adminpresensi")}
+        >
           <Text style={styles.buttonText}>👨‍💼 Admin Presensi</Text>
         </TouchableOpacity>
 
         {/* Tombol Rekap Masuk */}
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/rekapmasuk")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/rekapmasuk")}
+        >
           <Text style={styles.buttonText}>📝 Rekap Masuk</Text>
         </TouchableOpacity>
 
         {/* Tombol Rekap Pulang */}
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/rekappulang")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/rekappulang")}
+        >
           <Text style={styles.buttonText}>🏠 Rekap Pulang</Text>
         </TouchableOpacity>
       </View>

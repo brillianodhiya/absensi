@@ -5,7 +5,7 @@ import React from "react";
 
 const jadwal = () => {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.Container}>
       {/* Header dengan logo dan judul */}
       <View style={styles.header}>
         <Image
