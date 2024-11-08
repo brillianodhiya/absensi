@@ -6,11 +6,56 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DataSiswa = () => {
+  const [userData, setUserData] = useState({
+    nisn: "",
+    nama: "",
+    username: "",
+    password: "",
+    kelas_id: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [IsModalOpen, setIsModalOpen] = useState(false);
+  const getData = async () => {
+    const token = AsyncStorage.getItem("token");
+
+    if (!token) {
+      setError("Token not found. Please login.");
+      setLoading(false);
+      return;
+    }
+    axios
+      .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setUserData({
+          nisn: response.data.data.nisn,
+          nama: response.data.data.nama,
+          kelas_id: response.data.data.kelas_id,
+          username: response.data.data.username,
+          password: response.data.data.password,
+        });
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        setError("Failed to fetch user data.");
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -24,27 +69,27 @@ const DataSiswa = () => {
         <View style={styles.row}>
           <Text style={styles.infoText}>NISN</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>324646</Text>
+          <Text style={styles.isiText}>{userData.nisn || "-"}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Nama</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Bagus</Text>
+          <Text style={styles.isiText}>{userData.nama}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Kelas</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>X RPL A</Text>
+          <Text style={styles.isiText}>{userData.kelas_id}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Username</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Bgs</Text>
+          <Text style={styles.isiText}>{userData.username}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Password</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>12345678</Text>
+          <Text style={styles.isiText}>{userData.password}</Text>
         </View>
       </View>
       <TouchableOpacity
