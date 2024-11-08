@@ -43,7 +43,7 @@ import {
     return (
       <SafeAreaView style={styles.Container}>
         <View style={styles.header}>
-          <Text style={styles.textHeader}>Rekap Data</Text>
+          <Text style={styles.textHeader}>Rekap Absen</Text>
         </View>
         <View style={styles.infoContainer}>
           <View style={styles.row}>
