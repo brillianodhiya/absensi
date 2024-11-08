@@ -24,7 +24,7 @@ import {
     Alfa: "#00bcd4",
   };
   const RekapData = () => {
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item }: { item: any }) => (
       <View style={styles.itemContainer}>
         <View>
           <Text style={styles.nameText}>{item.name}</Text>
@@ -43,7 +43,7 @@ import {
     return (
       <SafeAreaView style={styles.Container}>
         <View style={styles.header}>
-          <Text style={styles.textHeader}>Rekap Data</Text>
+          <Text style={styles.textHeader}>Rekap Absen</Text>
         </View>
         <View style={styles.infoContainer}>
           <View style={styles.row}>
