@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DataSiswa = () => {
   const [userData, setUserData] = useState({
@@ -22,8 +23,8 @@ const DataSiswa = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [IsModalOpen, setIsModalOpen] = useState(false);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const getData = async () => {
+    const token = AsyncStorage.getItem("token");
 
     if (!token) {
       setError("Token not found. Please login.");
@@ -51,6 +52,9 @@ const DataSiswa = () => {
         setError("Failed to fetch user data.");
         setLoading(false);
       });
+  };
+  useEffect(() => {
+    getData();
   }, []);
   return (
     <SafeAreaView style={styles.Container}>

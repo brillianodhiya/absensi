@@ -31,6 +31,7 @@ const Index = () => {
       if (response.status === 200) {
         // Simpan token di AsyncStorage
         await AsyncStorage.setItem("token", response.data.token);
+        console.log(response.data.token);
         // Arahkan ke halaman home setelah login berhasil
         router.push("/(tabs)/home");
       }

@@ -4,42 +4,49 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router, useNavigation } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import axios from "axios";
-// import {  } from "expo-router";
 
 const Home = () => {
-  const navigation = useNavigation();
   const [userData, setUserData] = useState({
     name: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [IsModalOpen, setIsModalOpen] = useState(false);
-  useEffect(() => {
-    const token = AsyncStorage.getItem("token");
 
-    if (!token) {
-      setError("Token not found. Please login.");
-      setLoading(false);
-      return;
-    }
-    axios
-      .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setUserData({
-          name: response.data.data.username,
+  const getData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      console.log(token);
+      if (!token) {
+        setError("Token not found. Please login.");
+        setLoading(false);
+        return;
+      }
+      axios
+        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUserData({
+            name: response.data.data.username,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setError("Failed to fetch user data.");
+          setLoading(false);
         });
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-        setError("Failed to fetch user data.");
-        setLoading(false);
-      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
   return (
     <SafeAreaView style={styles.Container}>
