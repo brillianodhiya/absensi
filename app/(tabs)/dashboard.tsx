@@ -69,21 +69,21 @@ const dashboardUser = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/dataSiswa")}
+          onPress={() => router.push("/dataSiswa2")}
         >
           <Text style={styles.buttonText}>🧑‍🎓 Data Siswa</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/jadwal")}
+          onPress={() => router.push("/jadwalPelajaran")}
         >
           <Text style={styles.buttonText}>📅 Jadwal Pelajaran</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/presensi")}
+          onPress={() => router.push("/presensiMasuk")}
         >
           <Text style={styles.buttonText}>📝 Presensi</Text>
         </TouchableOpacity>
@@ -155,8 +155,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#fbb03b", // Warna kuning pada tombol
-    width: "80%",
-    padding: 10,
+    width: "85%",
+    padding: 20,
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 8,
