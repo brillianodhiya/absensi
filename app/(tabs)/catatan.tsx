@@ -43,6 +43,10 @@ const catatan = () => {
         <Text style={styles.label}>Catatan Materi Jam (5-10):</Text>
         <TextInput style={styles.input} placeholder="Masukkan catatan..." />
       </View>
+
+      <TouchableOpacity style={styles.presenceButtonKirim}>
+        <Text style={styles.presenceButtonText}>Kirim</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.presenceButton}
         onPress={() => router.push("/presensiPulang")}
@@ -102,9 +106,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "black",
   },
+  presenceButtonKirim: {
+    marginTop: 15,
+    alignItems: "center",
+    backgroundColor: "#fbb03b",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    width: "25%", // Sesuaikan lebar agar lebih proporsional di kanan
+    alignSelf: "flex-end", // Pindahkan tombol ke kanan
+    marginRight: 25,
+  },
   presenceButton: {
     flexDirection: "row",
-    marginTop: 15,
+    marginTop: 35,
     alignItems: "center",
     backgroundColor: "#40E9AE",
     paddingVertical: 12,
