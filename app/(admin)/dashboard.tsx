@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 const dashboardUser = () => {
@@ -15,6 +15,7 @@ const dashboardUser = () => {
 
   const getData = async () => {
     try {
+      console.log("Get data");
       const token = await AsyncStorage.getItem("token");
 
       console.log(token);
@@ -44,10 +45,19 @@ const dashboardUser = () => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  const Logout = async () => {
+    try {
+      await AsyncStorage.removeItem("token");
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -109,6 +119,10 @@ const dashboardUser = () => {
           onPress={() => router.push("/rekappulang")}
         >
           <Text style={styles.buttonText}>🏠 Rekap Pulang</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={Logout}>
+          <Text style={styles.buttonText}> Loguot</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

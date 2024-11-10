@@ -29,9 +29,9 @@ export default function TabLayout() {
       /> */}
 
       <Tabs.Screen
-        name="home"
+        name="dashboard"
         options={{
-          title: "Home" + role,
+          title: "Dashboard" + role,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
@@ -41,36 +41,21 @@ export default function TabLayout() {
         }}
       />
 
-      {/* <Tabs.Screen
-        name="kelas"
-        options={{
-          href: role == "siswa" ? null : undefined,
-          title: "Kelas",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home-sharp" : "home-sharp"}
-              color={color}
-            />
-          ),
-        }}
-      /> */}
       <Tabs.Screen
-        name="dataSiswa"
+        name="dataSiswa2"
         options={{
           title: "User",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "person" : "person-outline"}
+              name={focused ? "accessibility" : "accessibility-outline"}
               color={color}
             />
           ),
         }}
       />
-
       <Tabs.Screen
         name="catatan"
         options={{
-          href: role != "siswa" ? null : undefined,
           title: "Catatan",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon

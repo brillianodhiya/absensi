@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -12,12 +12,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import axios from "axios";
+// import { useUserRole } from "../../hooks/useUserRole";
 
 const Index = () => {
   const [nama, setNama] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState(null);
+  // const { role, loading } = useUserRole();
 
+  // console.log(role);
+
+  // useEffect(() => {
+  //   if (role == "siswa") {
+  //     router.push("/(tabs)/home");
+  //   }
+  // }, [role]);
   // Fungsi untuk login
   const handleLogin = async () => {
     try {
@@ -33,7 +42,12 @@ const Index = () => {
         await AsyncStorage.setItem("token", response.data.token);
         console.log(response.data.token);
         // Arahkan ke halaman home setelah login berhasil
-        router.push("/(tabs)/home");
+        await AsyncStorage.setItem("role", response.data.role);
+        if (response.data.role == "siswa") {
+          router.push("/(tabs)/home");
+        } else {
+          router.push("/(admin)/dashboard");
+        }
       }
     } catch (error) {
       console.error("Error saat login:", error);
@@ -54,7 +68,7 @@ const Index = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Image
-        source={require("../../assets/images/logo_smk-removebg-preview.png")}
+        source={require("../assets/images/logo_smk-removebg-preview.png")}
         style={styles.logo}
       />
 
