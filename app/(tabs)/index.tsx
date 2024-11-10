@@ -14,7 +14,9 @@ import { router } from "expo-router";
 import axios from "axios";
 
 const Index = () => {
+
   const [nama, setName] = useState("");
+
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState(null);
 
@@ -65,6 +67,7 @@ const Index = () => {
         style={styles.input}
         placeholder="Masukkan Nama"
         value={nama}
+
         onChangeText={setName}
       />
 

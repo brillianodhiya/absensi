@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 const dashboardUser = () => {
   const [userData, setUserData] = useState({
-    name: "",
+    nama: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ const dashboardUser = () => {
         })
         .then((response) => {
           setUserData({
-            name: response.data.data.username,
+            nama: response.data.data.nama,
           });
           setLoading(false);
         })
@@ -59,7 +59,7 @@ const dashboardUser = () => {
       </View>
       <View style={styles.body}>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
-        <Text style={styles.username}>{userData.name || "Username"}</Text>
+        <Text style={styles.username}>{userData.nama}</Text>
 
         <TouchableOpacity
           style={styles.button}
@@ -69,21 +69,21 @@ const dashboardUser = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/dataSiswa")}
+          onPress={() => router.push("/dataSiswa2")}
         >
           <Text style={styles.buttonText}>🧑‍🎓 Data Siswa</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/jadwal")}
+          onPress={() => router.push("/jadwalPelajaran")}
         >
           <Text style={styles.buttonText}>📅 Jadwal Pelajaran</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/presensi")}
+          onPress={() => router.push("/presensiMasuk")}
         >
           <Text style={styles.buttonText}>📝 Presensi</Text>
         </TouchableOpacity>
@@ -155,8 +155,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#fbb03b", // Warna kuning pada tombol
-    width: "80%",
-    padding: 10,
+    width: "85%",
+    padding: 20,
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 8,

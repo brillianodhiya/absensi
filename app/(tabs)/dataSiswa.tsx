@@ -15,16 +15,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const DataSiswa = () => {
   const [userData, setUserData] = useState({
     nisn: "",
+    nip: "",
     nama: "",
-    username: "",
-    password: "",
     kelas_id: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [IsModalOpen, setIsModalOpen] = useState(false);
   const getData = async () => {
-    const token = AsyncStorage.getItem("token");
+    const token = await AsyncStorage.getItem("token");
 
     if (!token) {
       setError("Token not found. Please login.");
@@ -42,8 +41,7 @@ const DataSiswa = () => {
           nisn: response.data.data.nisn,
           nama: response.data.data.nama,
           kelas_id: response.data.data.kelas_id,
-          username: response.data.data.username,
-          password: response.data.data.password,
+          nip: response.data.data.nip,
         });
         setLoading(false);
       })
@@ -72,6 +70,11 @@ const DataSiswa = () => {
           <Text style={styles.isiText}>{userData.nisn || "-"}</Text>
         </View>
         <View style={styles.row}>
+          <Text style={styles.infoText}>NIP</Text>
+          <Text style={styles.separator}>:</Text>
+          <Text style={styles.isiText}>{userData.nip || "-"}</Text>
+        </View>
+        <View style={styles.row}>
           <Text style={styles.infoText}>Nama</Text>
           <Text style={styles.separator}>:</Text>
           <Text style={styles.isiText}>{userData.nama}</Text>
@@ -80,16 +83,6 @@ const DataSiswa = () => {
           <Text style={styles.infoText}>Kelas</Text>
           <Text style={styles.separator}>:</Text>
           <Text style={styles.isiText}>{userData.kelas_id}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>Username</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>{userData.username}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>Password</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>{userData.password}</Text>
         </View>
       </View>
       <TouchableOpacity
