@@ -105,10 +105,10 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    marginTop: 15,
+    marginTop: 35,
   },
   textHeader: {
-    fontSize: 28,
+    fontSize: 25,
     color: "black",
     fontWeight: "bold",
     justifyContent: "center",
