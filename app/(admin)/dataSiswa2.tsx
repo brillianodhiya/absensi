@@ -7,7 +7,7 @@ const dataKelas = () => {
       {/* Header dengan logo dan judul */}
       <View style={styles.header}>
         <Image
-          source={require("../../assets/images/logosmk2.png")}
+          source={require("../../assets/images/logo_smk-removebg-preview.png")}
           style={styles.logo}
         />
         <Text style={styles.textHeader}>DATA SISWA {"\n \t \t \t"}X RPL A</Text>
@@ -81,19 +81,19 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
+    marginTop: 15,
   },
   textHeader: {
-    fontSize: 20,
-    flex: 1,
+    fontSize: 28,
     color: "black",
     fontWeight: "bold",
     justifyContent: "center",
-    marginTop: 30,
+    marginTop: 10,
   },
   logo: {
     width: 50,
     height: 50,
-    marginBottom: 10,
+    marginBottom: 20,
     marginRight: 60,
     marginLeft: 20,
   },

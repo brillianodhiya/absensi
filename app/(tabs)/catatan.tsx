@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -20,11 +20,13 @@ const catatan = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [IsModalOpen, setIsModalOpen] = useState(false);
+  const [isi_catatan, setCatatan] = useState("");
 
   const getData = async () => {
     try {
       console.log("Get data");
       const token = await AsyncStorage.getItem("token");
+      console.log();
 
       console.log(token);
       if (!token) {
@@ -54,14 +56,59 @@ const catatan = () => {
       console.log(error);
     }
   };
-
-  const catatan = async () => {
+  const handleCtn = async () => {
     try {
-      axios.post(
-        "https://px973nrz-3000.asse.devtunnels.ms/catatan/make_catatan"
-      );
-    } catch (error) {}
+      const token = await AsyncStorage.getItem("token");
+      console.log();
+
+      if (!token) {
+        setError("Token not found. Please login.");
+        setLoading(false);
+        return;
+      }
+
+      // Mengambil `id_user` dari AsyncStorage atau state, sesuai kebutuhan Anda
+      const id_user = await AsyncStorage.getItem("id"); // Sesuaikan ini jika `id_user` diambil dari tempat lain
+      if (!id_user) {
+        setError("User ID not found.");
+        setLoading(false);
+        return;
+      }
+
+      axios
+        .post(
+          "https://px973nrz-3000.asse.devtunnels.ms/catatan/make_catatan",
+          {
+            id_user: id_user,
+            isi_catatan: isi_catatan,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Note added successfully:");
+          setCatatan("");
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error adding note:", error);
+          setError("Failed to add note.");
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+      setError("An unexpected error occurred.");
+      setLoading(false);
+    }
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -87,16 +134,18 @@ const catatan = () => {
         </View>
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Catatan Materi Jam (1-4):</Text>
-        <TextInput style={styles.input} placeholder="Masukkan catatan..." />
+        <Text style={styles.label}>Catatan Materi:</Text>
+        <TextInput
+          style={styles.input}
+          value={isi_catatan}
+          placeholder="Masukkan catatan..."
+          onChangeText={(text) => setCatatan(text)}
+        />
       </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Catatan Materi Jam (5-10):</Text>
-        <TextInput style={styles.input} placeholder="Masukkan catatan..." />
-      </View>
-
       <TouchableOpacity style={styles.presenceButtonKirim}>
-        <Text style={styles.presenceButtonText}>Kirim</Text>
+        <Text style={styles.presenceButtonText} onPress={handleCtn}>
+          Kirim
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.presenceButton}
@@ -126,7 +175,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 45,
   },
   infoContainer: {
     marginHorizontal: 25,

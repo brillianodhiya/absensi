@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,11 +7,63 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PresensiMasuk = () => {
+  const [userData, setUserData] = useState({
+    nama: "",
+    kelas: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [IsModalOpen, setIsModalOpen] = useState(false);
+  const [isStatusButtonPressed, setIsStatusButtonPressed] = useState(null); // Melacak status klik pada tombol
+  const getData = async () => {
+    try {
+      console.log("Get data");
+      const token = await AsyncStorage.getItem("token");
+      console.log();
+
+      console.log(token);
+      if (!token) {
+        setError("Token not found. Please login.");
+        setLoading(false);
+        return;
+      }
+      axios
+        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUserData({
+            nama: response.data.data.nama,
+            kelas: response.data.data.kelas,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setError("Failed to fetch user data.");
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
+  const handleStatusButtonPress = (status: any) => {
+    setIsStatusButtonPressed(status); // Mengubah status tombol yang diklik
+  };
+
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -30,29 +83,41 @@ const PresensiMasuk = () => {
           <View style={styles.body}>
             <Text style={styles.infoText}>Nama</Text>
             <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>Estri Handayani</Text>
+            <Text style={styles.isiText}>{userData.nama}</Text>
           </View>
           <View style={styles.body}>
             <Text style={styles.infoText}>Kelas</Text>
             <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>X RPL B</Text>
-          </View>
-          <View style={styles.body}>
-            <Text style={styles.infoText}>Status</Text>
-            <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>Hadir</Text>
+            <Text style={styles.isiText}>{userData.kelas}</Text>
           </View>
         </View>
       </View>
-
       <View style={styles.statusContainer}>
-        <TouchableOpacity style={styles.statusButton}>
+        <TouchableOpacity
+          style={[
+            styles.statusButton,
+            isStatusButtonPressed === "H" && styles.statusButtonActive,
+          ]}
+          onPress={() => handleStatusButtonPress("H")}
+        >
           <Text style={styles.statusButtonText}>H</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.statusButton}>
+        <TouchableOpacity
+          style={[
+            styles.statusButton,
+            isStatusButtonPressed === "I" && styles.statusButtonActive,
+          ]}
+          onPress={() => handleStatusButtonPress("I")}
+        >
           <Text style={styles.statusButtonText}>I</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.statusButton}>
+        <TouchableOpacity
+          style={[
+            styles.statusButton,
+            isStatusButtonPressed === "S" && styles.statusButtonActive,
+          ]}
+          onPress={() => handleStatusButtonPress("S")}
+        >
           <Text style={styles.statusButtonText}>S</Text>
         </TouchableOpacity>
       </View>
@@ -73,7 +138,7 @@ export default PresensiMasuk;
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
+    backgroundColor: "#C8EDEE",
   },
   header: {
     flexDirection: "row",
@@ -132,10 +197,10 @@ const styles = StyleSheet.create({
     color: "black",
   },
   statusContainer: {
-    marginTop: 50,
+    marginTop: 30,
     flexDirection: "row",
     marginBottom: 20,
-    marginHorizontal: "auto",
+    justifyContent: "center",
   },
   statusButton: {
     backgroundColor: "#000",
@@ -143,6 +208,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     marginHorizontal: 5,
+  },
+  statusButtonActive: {
+    backgroundColor: "green", // Warna tombol berubah menjadi hijau saat diklik
   },
   statusButtonText: {
     color: "white",
@@ -158,7 +226,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     width: "85%",
-    marginHorizontal: "auto",
+    alignSelf: "center",
   },
   presenceButtonText: {
     color: "white",
