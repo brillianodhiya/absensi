@@ -15,7 +15,9 @@ import axios from "axios";
 // import { useUserRole } from "../../hooks/useUserRole";
 
 const Index = () => {
-  const [nama, setNama] = useState("");
+
+  const [nama, setName] = useState("");
+
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState(null);
   // const { role, loading } = useUserRole();
@@ -79,7 +81,8 @@ const Index = () => {
         style={styles.input}
         placeholder="Masukkan Nama"
         value={nama}
-        onChangeText={setNama}
+
+        onChangeText={setName}
       />
 
       <Text style={styles.label}>Password</Text>
