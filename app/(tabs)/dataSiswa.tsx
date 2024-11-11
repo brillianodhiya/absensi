@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -17,7 +17,7 @@ const DataSiswa = () => {
     nisn: "",
     nip: "",
     nama: "",
-    kelas_id: "",
+    kelas: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ const DataSiswa = () => {
         setUserData({
           nisn: response.data.data.nisn,
           nama: response.data.data.nama,
-          kelas_id: response.data.data.kelas_id,
+          kelas: response.data.data.kelas,
           nip: response.data.data.nip,
         });
         setLoading(false);
@@ -51,9 +51,11 @@ const DataSiswa = () => {
         setLoading(false);
       });
   };
-  useEffect(() => {
-    getData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -82,7 +84,7 @@ const DataSiswa = () => {
         <View style={styles.row}>
           <Text style={styles.infoText}>Kelas</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>{userData.kelas_id}</Text>
+          <Text style={styles.isiText}>{userData.kelas}</Text>
         </View>
       </View>
       <TouchableOpacity

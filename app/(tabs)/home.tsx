@@ -1,9 +1,10 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Home = () => {
   const [userData, setUserData] = useState({
@@ -15,6 +16,7 @@ const Home = () => {
 
   const getData = async () => {
     try {
+      setLoading(true);
       const token = await AsyncStorage.getItem("token");
 
       console.log(token);
@@ -45,9 +47,21 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const Logout = async () => {
+    try {
+      await AsyncStorage.removeItem("token");
+      console.log();
+      router.push("/");
+    } catch (error) {
+      console.error("Error saat menghapus token:", error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -81,6 +95,10 @@ const Home = () => {
           onPress={() => router.push("/presensiMasuk")}
         >
           <Text style={styles.buttonText}> Presensi Masuk</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={Logout}>
+          <Text style={styles.buttonText}> Logout</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
