@@ -5,13 +5,62 @@ import {
   Text,
   View,
   TouchableOpacity,
-  StatusBar,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DataSiswa = () => {
+  const [userData, setUserData] = useState({
+    role: "", // Menambahkan role untuk melacak peran pengguna
+    nisn: "",
+    nip: "",
+    nama: "",
+    kelas: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const getData = async () => {
+    const token = await AsyncStorage.getItem("token");
+
+    if (!token) {
+      setError("Token not found. Please login.");
+      setLoading(false);
+      return;
+    }
+    axios
+      .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        setUserData({
+          role: data.role, // Mendapatkan role dari response
+          nisn: data.nisn,
+          nama: data.nama,
+          kelas: data.kelas,
+          nip: data.nip,
+        });
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        setError("Failed to fetch user data.");
+        setLoading(false);
+      });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
+
   return (
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
@@ -19,41 +68,39 @@ const DataSiswa = () => {
           source={require("../assets/images/logo_smk-removebg-preview.png")}
           style={styles.logo}
         />
-        <Text style={styles.textHeader}>DATA PESERTA DIDIK</Text>
+        <Text style={styles.textHeader}>DATA GURU</Text>
       </View>
       <View style={styles.body}>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>NISN</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>324646</Text>
-        </View>
+        {/* Tampilkan NISN jika role adalah "siswa", dan NIP jika role adalah "guru" */}
+        {userData.role === "siswa" ? (
+          <View style={styles.row}>
+            <Text style={styles.infoText}>NISN</Text>
+            <Text style={styles.separator}>:</Text>
+            <Text style={styles.isiText}>{userData.nisn || "-"}</Text>
+          </View>
+        ) : userData.role === "guru" ? (
+          <View style={styles.row}>
+            <Text style={styles.infoText}>NIP</Text>
+            <Text style={styles.separator}>:</Text>
+            <Text style={styles.isiText}>{userData.nip || "-"}</Text>
+          </View>
+        ) : null}
         <View style={styles.row}>
           <Text style={styles.infoText}>Nama</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Bagus</Text>
+          <Text style={styles.isiText}>{userData.nama}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Kelas</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>X RPL A</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>Username</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Bgs</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>Password</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>12345678</Text>
+          <Text style={styles.isiText}>{userData.kelas}</Text>
         </View>
       </View>
       <TouchableOpacity
         style={styles.presenceButton}
-        onPress={() => router.push("/presensiMasuk")}
+        onPress={() => router.push("/(admin)/dashboard")}
       >
-        <Ionicons name="create-outline" size={20} color="white" />
-        <Text style={styles.presenceButtonText}>PRESENSI</Text>
+        <Text style={styles.presenceButtonText}>Kembali</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -63,13 +110,12 @@ export default DataSiswa;
 
 const styles = StyleSheet.create({
   Container: {
-    marginTop: StatusBar.currentHeight,
     flex: 1,
-    backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
+    backgroundColor: "#C8EDEE",
   },
   header: {
     flexDirection: "row",
-    marginTop: 15,
+    marginTop: 45,
   },
   textHeader: {
     fontSize: 28,
@@ -97,18 +143,18 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 18,
     fontWeight: "bold",
-    width: 100, // Lebar tetap untuk alignment yang lebih rapi
+    width: 100,
     color: "black",
   },
   separator: {
     fontSize: 18,
     fontWeight: "bold",
-    marginHorizontal: 5, // Jarak antara infoText dan isiText
+    marginHorizontal: 5,
     color: "black",
   },
   isiText: {
     fontSize: 18,
-    flex: 1, // Mengisi sisa ruang pada baris
+    flex: 1,
     color: "black",
   },
   presenceButton: {
@@ -119,7 +165,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 5,
-    width: "85%",
+    width: "25%",
     marginHorizontal: "auto",
   },
   presenceButtonText: {
