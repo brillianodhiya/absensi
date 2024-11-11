@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import Header from "@/components/Header";
 const dashboardUser = () => {
   const [userData, setUserData] = useState({
     nama: "",
@@ -62,7 +63,7 @@ const dashboardUser = () => {
     <SafeAreaView style={styles.Container}>
       <View style={styles.header}>
         <Image
-          source={require("../../assets/images/logo_smk-removebg-preview.png")}
+          source={require("../../assets/images/logosmk2.png")}
           style={styles.logo}
         />
         <Text style={styles.textHeader}>DASHBOARD</Text>
@@ -128,19 +129,18 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    marginTop: 15,
   },
   textHeader: {
-    fontSize: 28,
+    fontSize: 20,
     color: "black",
     fontWeight: "bold",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 5,
   },
   logo: {
     width: 50,
     height: 50,
-    marginBottom: 20,
+    marginBottom: 10,
     marginRight: 60,
     marginLeft: 20,
   },
