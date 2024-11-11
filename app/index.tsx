@@ -10,25 +10,25 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
-// import { useUserRole } from "../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const Index = () => {
-
   const [nama, setName] = useState("");
 
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState(null);
-  // const { role, loading } = useUserRole();
+  const { loading, role } = useUserRole();
 
-  // console.log(role);
+  useEffect(() => {
+    if (role == "siswa") {
+      router.push("/(tabs)/home");
+    } else if (role == "guru") {
+      router.push("/(admin)/dashboard");
+    }
+  }, [role, router]);
 
-  // useEffect(() => {
-  //   if (role == "siswa") {
-  //     router.push("/(tabs)/home");
-  //   }
-  // }, [role]);
   // Fungsi untuk login
   const handleLogin = async () => {
     try {
@@ -56,17 +56,6 @@ const Index = () => {
     }
   };
 
-  // Fungsi untuk mengambil data
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("/data-endpoint"); // Endpoint untuk data
-      console.log("Data dari server:", response.data);
-      // Simpan data atau tampilkan sesuai kebutuhan
-    } catch (error) {
-      console.error("Error saat mengambil data:", error);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -81,7 +70,6 @@ const Index = () => {
         style={styles.input}
         placeholder="Masukkan Nama"
         value={nama}
-
         onChangeText={setName}
       />
 

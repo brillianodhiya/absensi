@@ -15,6 +15,7 @@ import Header from "@/components/Header";
 
 const DataSiswa = () => {
   const [userData, setUserData] = useState({
+    role: "", // Menambahkan role untuk melacak peran pengguna
     nisn: "",
     nip: "",
     nama: "",
@@ -22,7 +23,7 @@ const DataSiswa = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [IsModalOpen, setIsModalOpen] = useState(false);
+
   const getData = async () => {
     const token = await AsyncStorage.getItem("token");
 
@@ -38,11 +39,13 @@ const DataSiswa = () => {
         },
       })
       .then((response) => {
+        const data = response.data.data;
         setUserData({
-          nisn: response.data.data.nisn,
-          nama: response.data.data.nama,
-          kelas: response.data.data.kelas,
-          nip: response.data.data.nip,
+          role: data.role, // Mendapatkan role dari response
+          nisn: data.nisn,
+          nama: data.nama,
+          kelas: data.kelas,
+          nip: data.nip,
         });
         setLoading(false);
       })
@@ -52,25 +55,31 @@ const DataSiswa = () => {
         setLoading(false);
       });
   };
+
   useFocusEffect(
     React.useCallback(() => {
       getData();
     }, [])
   );
+
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="DATA SISWA" />
       <View style={styles.body}>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>NISN</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>{userData.nisn || "-"}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>NIP</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>{userData.nip || "-"}</Text>
-        </View>
+        {/* Tampilkan NISN jika role adalah "siswa", dan NIP jika role adalah "guru" */}
+        {userData.role === "siswa" ? (
+          <View style={styles.row}>
+            <Text style={styles.infoText}>NISN</Text>
+            <Text style={styles.separator}>:</Text>
+            <Text style={styles.isiText}>{userData.nisn || "-"}</Text>
+          </View>
+        ) : userData.role === "guru" ? (
+          <View style={styles.row}>
+            <Text style={styles.infoText}>NIP</Text>
+            <Text style={styles.separator}>:</Text>
+            <Text style={styles.isiText}>{userData.nip || "-"}</Text>
+          </View>
+        ) : null}
         <View style={styles.row}>
           <Text style={styles.infoText}>Nama</Text>
           <Text style={styles.separator}>:</Text>
@@ -98,10 +107,11 @@ export default DataSiswa;
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
+    backgroundColor: "#C8EDEE",
   },
 
   
+
   body: {
     marginTop: 30,
   },
@@ -114,18 +124,18 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 18,
     fontWeight: "bold",
-    width: 100, // Lebar tetap untuk alignment yang lebih rapi
+    width: 100,
     color: "black",
   },
   separator: {
     fontSize: 18,
     fontWeight: "bold",
-    marginHorizontal: 5, // Jarak antara infoText dan isiText
+    marginHorizontal: 5,
     color: "black",
   },
   isiText: {
     fontSize: 18,
-    flex: 1, // Mengisi sisa ruang pada baris
+    flex: 1,
     color: "black",
   },
   presenceButton: {

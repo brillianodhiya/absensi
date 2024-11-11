@@ -6,7 +6,8 @@ const dataKelas = () => {
   return (
     <SafeAreaView style={styles.Container}>
       {/* Header dengan logo dan judul */}
-      <Header title="DATA SISWA"/>
+
+      <Header title="DATA SISWA" />
       <View style={styles.ContainerList}>
         <View style={styles.ListItem}>
           <Text style={styles.textHeader}>NISN </Text>
@@ -74,16 +75,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
-  
+
   textHeader: {
-    fontSize: 20,
-    flex: 1,
+    fontSize: 28,
     color: "black",
     fontWeight: "bold",
     justifyContent: "center",
-    marginTop: 30,
+    marginTop: 10,
   },
-  
   listContainer: {
     padding: 10,
   },

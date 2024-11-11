@@ -61,11 +61,22 @@ const dashboardUser = () => {
   );
   return (
     <SafeAreaView style={styles.Container}>
-      <Header title="DASHBOARD" />
+      <View style={styles.header}>
+        <Image
+          source={require("../../assets/images/logosmk2.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.textHeader}>DASHBOARD</Text>
+      </View>
       <View style={styles.body}>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
         <Text style={styles.username}>{userData.nama}</Text>
-
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/dataSiswa")}
+        >
+          <Text style={styles.buttonText}> Data Guru</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.push("/kelas")}
@@ -88,32 +99,17 @@ const dashboardUser = () => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/presensiMasuk")}
-        >
-          <Text style={styles.buttonText}>📝 Presensi</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
           onPress={() => router.push("/adminpresensi")}
         >
           <Text style={styles.buttonText}>👨‍💼 Admin Presensi</Text>
         </TouchableOpacity>
 
-        {/* Tombol Rekap Masuk */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/rekapmasuk")}
-        >
-          <Text style={styles.buttonText}>📝 Rekap Masuk</Text>
-        </TouchableOpacity>
-
         {/* Tombol Rekap Pulang */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/rekappulang")}
+          onPress={() => router.push("/rekapabsen")}
         >
-          <Text style={styles.buttonText}>🏠 Rekap Pulang</Text>
+          <Text style={styles.buttonText}>🏠 Rekap Absen</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button} onPress={Logout}>
@@ -131,7 +127,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
-  
+  header: {
+    flexDirection: "row",
+  },
+  textHeader: {
+    fontSize: 20,
+    color: "black",
+    fontWeight: "bold",
+    justifyContent: "center",
+    marginTop: 5,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginBottom: 10,
+    marginRight: 60,
+    marginLeft: 20,
+  },
   body: {
     marginTop: 10,
     marginLeft: 50,

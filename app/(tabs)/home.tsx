@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
   },
 
   body: {
-    marginTop: 10,
     marginLeft: 25,
   },
   username: {
