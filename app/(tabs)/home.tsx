@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-
+import Header from "@/components/Header";
 const Home = () => {
   const [userData, setUserData] = useState({
     nama: "",
@@ -64,13 +64,7 @@ const Home = () => {
   );
   return (
     <SafeAreaView style={styles.Container}>
-      <View style={styles.header}>
-        <Image
-          source={require("../../assets/images/logo_smk-removebg-preview.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.textHeader}>DASHBOARD</Text>
-      </View>
+      <Header title="DASHBOARD" />
       <View style={styles.body}>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
         <Text style={styles.username}>{userData.nama || "Nama User"}</Text>
@@ -109,29 +103,13 @@ export default Home;
 
 const styles = StyleSheet.create({
   Container: {
+    marginTop: -33,
     flex: 1,
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
-  header: {
-    flexDirection: "row",
-    marginTop: 15,
-  },
-  textHeader: {
-    fontSize: 28,
-    color: "black",
-    fontWeight: "bold",
-    justifyContent: "center",
-    marginTop: 10,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 20,
-    marginRight: 60,
-    marginLeft: 20,
-  },
+
   body: {
-    marginTop: 50,
+    marginTop: 10,
     marginLeft: 25,
   },
   username: {
@@ -145,7 +123,7 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   buttonBody: {
-    marginTop: 25,
+    marginTop: 10,
     alignItems: "center",
     justifyContent: "center",
     width: "100%", // Lebar penuh agar bisa memusatkan tombol

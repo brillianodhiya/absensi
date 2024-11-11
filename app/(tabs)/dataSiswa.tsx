@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Header from "@/components/Header";
 
 const DataSiswa = () => {
   const [userData, setUserData] = useState({
@@ -58,13 +59,7 @@ const DataSiswa = () => {
   );
   return (
     <SafeAreaView style={styles.Container}>
-      <View style={styles.header}>
-        <Image
-          source={require("../../assets/images/logo_smk-removebg-preview.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.textHeader}>DATA PESERTA DIDIK</Text>
-      </View>
+      <Header title="DATA SISWA" />
       <View style={styles.body}>
         <View style={styles.row}>
           <Text style={styles.infoText}>NISN</Text>
@@ -105,24 +100,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
-  header: {
-    flexDirection: "row",
-    marginTop: 35,
-  },
-  textHeader: {
-    fontSize: 25,
-    color: "black",
-    fontWeight: "bold",
-    justifyContent: "center",
-    marginTop: 10,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 20,
-    marginRight: 35,
-    marginLeft: 20,
-  },
+
+  
   body: {
     marginTop: 30,
   },

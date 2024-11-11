@@ -1,17 +1,12 @@
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import Header from "@/components/Header";
 
 const dataKelas = () => {
   return (
     <SafeAreaView style={styles.Container}>
       {/* Header dengan logo dan judul */}
-      <View style={styles.header}>
-        <Image
-          source={require("../../assets/images/logosmk2.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.textHeader}>DATA SISWA {"\n \t \t \t"}X RPL A</Text>
-      </View>
+      <Header title="DATA SISWA"/>
       <View style={styles.ContainerList}>
         <View style={styles.ListItem}>
           <Text style={styles.textHeader}>NISN </Text>
@@ -79,9 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
-  header: {
-    flexDirection: "row",
-  },
+  
   textHeader: {
     fontSize: 20,
     flex: 1,
@@ -90,13 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 30,
   },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-    marginRight: 60,
-    marginLeft: 20,
-  },
+  
   listContainer: {
     padding: 10,
   },

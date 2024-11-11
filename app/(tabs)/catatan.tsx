@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Header from "@/components/Header";
 
 const catatan = () => {
   const [userData, setUserData] = useState({
@@ -64,9 +65,7 @@ const catatan = () => {
   };
   return (
     <SafeAreaView style={styles.Container}>
-      <View style={styles.header}>
-        <Text style={styles.textHeader}>CATATAN PRESENSI</Text>
-      </View>
+      <Header title="CATATAN"/>
       <View style={styles.infoContainer}>
         <View style={styles.row}>
           <View style={styles.body}>
