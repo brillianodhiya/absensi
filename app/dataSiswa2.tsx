@@ -1,54 +1,53 @@
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import axios from "axios";
 import { useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const dataKelas = () => {
-  const [userData, setUserData] = useState({
-    nama: "",
-    kelas: "",
-    nisn: "",
-  });
+const DataKelas = () => {
+  const [userData, setUserData] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [IsModalOpen, setIsModalOpen] = useState(false);
 
   const getData = async () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
 
-      console.log(token);
       if (!token) {
-        setError("Token not found. Please login.");
+        setError("Token tidak ditemukan. Silakan login.");
         setLoading(false);
         return;
       }
+
       axios
-        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+        .get("https://px973nrz-3000.asse.devtunnels.ms/users/showAll_profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
-          setUserData({
-            nama: response.data.data.nama,
-            kelas: response.data.data.kelas,
-            nisn: response.data.data.nisn,
-          });
+          if (response.data && response.data.data) {
+            const profiles = response.data.data.map((data: any) => ({
+              nama: data.nama,
+              nisn: data.nisn,
+              kelas: data.kelas ? data.kelas.nama_kelas : "N/A",
+            }));
+            setUserData(profiles);
+          }
           setLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
-          setError("Failed to fetch user data.");
+          setError("Gagal mengambil data pengguna.");
           setLoading(false);
         });
     } catch (error) {
       console.log(error);
     }
   };
+
   useFocusEffect(
     React.useCallback(() => {
       getData();
@@ -64,17 +63,19 @@ const dataKelas = () => {
           <Text style={styles.textHeader}>Nama </Text>
           <Text style={styles.textHeader}>Kelas</Text>
         </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>{userData.nisn}</Text>
-          <Text style={styles.ListText}>{userData.nama}</Text>
-          <Text style={styles.ListText}>{userData.kelas}</Text>
-        </View>
+        {userData.map((user, index) => (
+          <View key={index} style={styles.ListItem}>
+            <Text style={styles.ListText}>{user.nisn}</Text>
+            <Text style={styles.ListText}>{user.nama}</Text>
+            <Text style={styles.ListText}>{user.kelas}</Text>
+          </View>
+        ))}
       </View>
     </SafeAreaView>
   );
 };
 
-export default dataKelas;
+export default DataKelas;
 
 const styles = StyleSheet.create({
   ContainerList: {

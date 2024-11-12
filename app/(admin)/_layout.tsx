@@ -42,7 +42,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="dataSiswa2"
+        name="dataGuru"
         options={{
           title: "User",
           tabBarIcon: ({ color, focused }) => (
