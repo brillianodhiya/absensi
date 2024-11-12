@@ -5,7 +5,9 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Alert,
 } from "react-native";
+import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
@@ -19,15 +21,14 @@ const PresensiMasuk = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [IsModalOpen, setIsModalOpen] = useState(false);
-  const [isStatusButtonPressed, setIsStatusButtonPressed] = useState(null); // Melacak status klik pada tombol
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isStatusButtonPressed, setIsStatusButtonPressed] = useState(null);
   const [is_leave, setIs_leave] = useState<0 | 1 | 2 | 3 | null>(null);
+
   const getData = async () => {
     try {
       console.log("Get data");
       const token = await AsyncStorage.getItem("token");
-
-      console.log(token);
       if (!token) {
         setError("Token not found. Please login.");
         setLoading(false);
@@ -55,21 +56,37 @@ const PresensiMasuk = () => {
       console.log(error);
     }
   };
+
   const masuk = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-
       if (!token) {
         setError("Token not found. Please login.");
         setLoading(false);
         return;
       }
+
+      // Request location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission Denied", "Location permission is required.");
+        setLoading(false);
+        return;
+      }
+
+      // Get the current location
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+
+      // Send location data along with leave status
       const leaveStatus = is_leave !== null ? is_leave : 0;
       axios
         .post(
           "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/clockin",
           {
             is_leave: leaveStatus,
+            latitude,
+            longitude,
           },
           {
             headers: {
@@ -83,7 +100,6 @@ const PresensiMasuk = () => {
           router.push("/(tabs)/home");
         })
         .catch((error) => {
-          console.log(token);
           console.error("Error adding note:", error);
           setError("Failed to add note.");
           setLoading(false);
@@ -94,11 +110,13 @@ const PresensiMasuk = () => {
       setLoading(false);
     }
   };
+
   useFocusEffect(
     React.useCallback(() => {
       getData();
     }, [])
   );
+
   const handleStatusButtonPress = (status: any) => {
     setIsStatusButtonPressed(status);
     setIs_leave(
@@ -128,6 +146,7 @@ const PresensiMasuk = () => {
           </View>
         </View>
       </View>
+
       <View style={styles.statusContainer}>
         <TouchableOpacity
           style={[
@@ -157,9 +176,11 @@ const PresensiMasuk = () => {
           <Text style={styles.statusButtonText}>S</Text>
         </TouchableOpacity>
       </View>
+
       <TouchableOpacity style={styles.backButton} onPress={() => masuk()}>
         <Text style={styles.presenceButtonText}>Continue</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.presenceButton}
         onPress={() => router.push("/(tabs)/catatan")}
@@ -172,6 +193,8 @@ const PresensiMasuk = () => {
 };
 
 export default PresensiMasuk;
+
+// Rest of the style definitions...
 
 const styles = StyleSheet.create({
   Container: {

@@ -4,31 +4,28 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location"; // Import expo-location
 import Header from "@/components/Header";
 
-const PresensiMasuk = () => {
+const PresensiPulang = () => {
   const [userData, setUserData] = useState({
     nama: "",
     kelas: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [IsModalOpen, setIsModalOpen] = useState(false);
-  const [isStatusButtonPressed, setIsStatusButtonPressed] = useState(null); // Melacak status klik pada tombol
+  const [isStatusButtonPressed, setIsStatusButtonPressed] = useState(null);
   const [is_leave, setIs_leave] = useState<0 | 1 | 2 | 3 | null>(null);
+
   const getData = async () => {
     try {
-      console.log("Get data");
       const token = await AsyncStorage.getItem("token");
-
-      console.log(token);
       if (!token) {
         setError("Token not found. Please login.");
         setLoading(false);
@@ -36,9 +33,7 @@ const PresensiMasuk = () => {
       }
       axios
         .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
           setUserData({
@@ -56,37 +51,43 @@ const PresensiMasuk = () => {
       console.log(error);
     }
   };
+
   const pulang = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-
       if (!token) {
         setError("Token not found. Please login.");
         setLoading(false);
         return;
       }
+
+      // Meminta izin lokasi dari pengguna
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setError("Permission to access location was denied");
+        return;
+      }
+
+      // Mengambil posisi saat ini
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+
+      // Mengirim permintaan ke server dengan data lokasi
       const leaveStatus = is_leave !== null ? is_leave : 0;
       axios
         .post(
           "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/clockout",
-          {
-            is_leave: leaveStatus,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { is_leave: leaveStatus, latitude, longitude },
+          { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((response) => {
-          console.log("Note added successfully:");
+          console.log("Clock-out successful");
           setLoading(false);
           router.push("/(tabs)/home");
         })
         .catch((error) => {
-          console.log(token);
-          console.error("Error adding note:", error);
-          setError("Failed to add note.");
+          console.error("Error during clock-out:", error);
+          setError("Failed to clock out.");
           setLoading(false);
         });
     } catch (error) {
@@ -95,11 +96,13 @@ const PresensiMasuk = () => {
       setLoading(false);
     }
   };
+
   useFocusEffect(
     React.useCallback(() => {
       getData();
     }, [])
   );
+
   const handleStatusButtonPress = (status: any) => {
     setIsStatusButtonPressed(status);
     setIs_leave(
@@ -110,7 +113,6 @@ const PresensiMasuk = () => {
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="PRESENSI" />
-
       <View style={styles.welcome}>
         <Text style={styles.welcomeText}>Pulang</Text>
       </View>
@@ -129,6 +131,7 @@ const PresensiMasuk = () => {
           </View>
         </View>
       </View>
+
       <View style={styles.statusContainer}>
         <TouchableOpacity
           style={[
@@ -158,6 +161,7 @@ const PresensiMasuk = () => {
           <Text style={styles.statusButtonText}>S</Text>
         </TouchableOpacity>
       </View>
+
       <TouchableOpacity style={styles.backButton} onPress={() => pulang()}>
         <Text style={styles.presenceButtonText}>Continue</Text>
       </TouchableOpacity>
@@ -172,7 +176,7 @@ const PresensiMasuk = () => {
   );
 };
 
-export default PresensiMasuk;
+export default PresensiPulang;
 
 const styles = StyleSheet.create({
   Container: {

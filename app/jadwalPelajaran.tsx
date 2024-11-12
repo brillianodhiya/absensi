@@ -14,62 +14,42 @@ import { useFocusEffect } from "expo-router";
 const JadwalPelajaran = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [jadwal, setJadwal] = useState({
-    nama_pelajaran: "",
-    jam: "",
-    materi: "",
-    kelas: "",
-    hari: "",
-  });
+  const [data, setData] = useState<any[]>([]);
 
-  const getJadwal = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const token = await AsyncStorage.getItem("token");
+  const getData = async () => {
+    setLoading(true);
+    const token = await AsyncStorage.getItem("token");
 
-      if (!token) {
-        setError("Token not found. Please login.");
-        setLoading(false);
-        return;
-      }
-
-      const response = await axios.get(
+    if (!token) {
+      setError("Token not found. Please login.");
+      setLoading(false);
+      return;
+    }
+    axios
+      .get(
         "https://px973nrz-3000.asse.devtunnels.ms/jadwal_kelas/show_jadwal",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-
-      // Log the entire response to verify the data structure
-      console.log("API Response:", response.data);
-
-      // Check if data exists and has the expected structure
-      if (response.data && response.data.data) {
+      )
+      .then((response) => {
         const data = response.data.data;
-        setJadwal({
-          nama_pelajaran: data.nama_pelajaran,
-          jam: data.jam,
-          materi: data.materi,
-          kelas: data.kelas,
-          hari: data.hari,
-        });
-      } else {
-        setError("Unexpected response structure.");
-      }
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching schedule data:", error);
-      setError("Failed to fetch schedule data.");
-      setLoading(false);
-    }
+        console.log(data);
+        setData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        setError("Failed to fetch user data.");
+        setLoading(false);
+      });
   };
 
   useFocusEffect(
     React.useCallback(() => {
-      getJadwal();
+      getData();
     }, [])
   );
 
@@ -82,31 +62,35 @@ const JadwalPelajaran = () => {
         <Text style={styles.errorText}>{error}</Text>
       ) : (
         <View style={styles.body}>
-          <View style={styles.row}>
-            <Text style={styles.infoText}>Kelas</Text>
-            <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{jadwal.kelas}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.infoText}>Hari</Text>
-            <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{jadwal.hari}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.infoText}>Jam ke</Text>
-            <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{jadwal.jam}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.infoText}>Mapel</Text>
-            <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{jadwal.nama_pelajaran}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.infoText}>Materi</Text>
-            <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{jadwal.materi}</Text>
-          </View>
+          {data.map((item, index) => (
+            <View key={index} style={styles.row}>
+              <View style={styles.row}>
+                <Text style={styles.infoText}>Kelas</Text>
+                <Text style={styles.separator}>:</Text>
+                <Text style={styles.isiText}>{item.kelas}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.infoText}>Hari</Text>
+                <Text style={styles.separator}>:</Text>
+                <Text style={styles.isiText}>{item.hari}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.infoText}>Jam ke</Text>
+                <Text style={styles.separator}>:</Text>
+                <Text style={styles.isiText}>{item.jam}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.infoText}>Mapel</Text>
+                <Text style={styles.separator}>:</Text>
+                <Text style={styles.isiText}>{item.nama_pelajaran}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.infoText}>Materi</Text>
+                <Text style={styles.separator}>:</Text>
+                <Text style={styles.isiText}>{item.materi}</Text>
+              </View>
+            </View>
+          ))}
         </View>
       )}
     </SafeAreaView>
