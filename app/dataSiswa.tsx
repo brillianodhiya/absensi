@@ -19,6 +19,7 @@ const DataSiswa = () => {
     nip: "",
     nama: "",
     kelas: "",
+    mapel: "", //tambahan mapel
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -45,6 +46,7 @@ const DataSiswa = () => {
           nama: data.nama,
           kelas: data.kelas,
           nip: data.nip,
+          mapel: data.mapel,//tambahan mapel
         });
         setLoading(false);
       })
@@ -91,9 +93,9 @@ const DataSiswa = () => {
           <Text style={styles.isiText}>{userData.nama}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.infoText}>Kelas</Text>
+          <Text style={styles.infoText}>Mapel</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>{userData.kelas}</Text>
+          <Text style={styles.isiText}>{userData.mapel}</Text> //mengubah dr kelas mjd  mapel
         </View>
       </View>
       <TouchableOpacity
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FFB22C",
     paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     borderRadius: 5,
     width: "25%",
     marginHorizontal: "auto",
