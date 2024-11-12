@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
   ContainerList: {
     display: "flex",
     flexDirection: "column",
-    // padding: 10,
     backgroundColor: "#f8f8f8",
     paddingLeft: 20,
     paddingRight: 20,
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
   },
   Container: {
     flex: 1,
-    backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
+    backgroundColor: "#C8EDEE", 
   },
 
   textHeader: {

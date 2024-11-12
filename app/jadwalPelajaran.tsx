@@ -73,7 +73,7 @@ const JadwalPelajaran = () => {
         <View style={styles.row}>
           <Text style={styles.infoText}>Hari</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Senin</Text>
+          <Text style={styles.isiText}>Rabu</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Tanggal</Text>
