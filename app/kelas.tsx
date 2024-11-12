@@ -1,7 +1,47 @@
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { useFocusEffect } from "expo-router";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const dataKelas = () => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any[]>([]);
+
+  const getData = async () => {
+    setLoading(true);
+    const token = await AsyncStorage.getItem("token");
+
+    if (!token) {
+      setError("Token not found. Please login.");
+      setLoading(false);
+      return;
+    }
+    axios
+      .get("https://px973nrz-3000.asse.devtunnels.ms/users/showAll_profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        console.log(data);
+        setData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        setError("Failed to fetch user data.");
+        setLoading(false);
+      });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.Container}>
       {/* Header dengan logo dan judul */}
@@ -17,22 +57,21 @@ const dataKelas = () => {
           <Text style={styles.textHeader}>Kode Kelas</Text>
           <Text style={styles.textHeader}>Wali Kelas</Text>
         </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>X RPL A</Text>
-          <Text style={styles.ListText}>Ervi Rahmawati, S.T</Text>
-        </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>X RPL B</Text>
-          <Text style={styles.ListText}>Labib Fayumi, S.Kom</Text>
-        </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>X RPL C</Text>
-          <Text style={styles.ListText}>Dwi Fikhrotul, S.Kom</Text>
-        </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>XI RPL A</Text>
-          <Text style={styles.ListText}>Novi Dyah P, S.Pd</Text>
-        </View>
+        {loading ? (
+          <View style={styles.ListItem}>
+            <Text style={styles.ListText}>Loading...</Text>
+            <Text style={styles.ListText}>Loading...</Text>
+          </View>
+        ) : (
+          data.map((item, index) => {
+            return (
+              <View key={index} style={styles.ListItem}>
+                <Text style={styles.ListText}>{item.kelas.nama_kelas}</Text>
+                <Text style={styles.ListText}>{item.nama}</Text>
+              </View>
+            );
+          })
+        )}
       </View>
     </SafeAreaView>
   );
