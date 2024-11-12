@@ -22,11 +22,11 @@ const PresensiMasuk = () => {
   const [loading, setLoading] = useState(true);
   const [IsModalOpen, setIsModalOpen] = useState(false);
   const [isStatusButtonPressed, setIsStatusButtonPressed] = useState(null); // Melacak status klik pada tombol
+  const [is_leave, setIs_leave] = useState<0 | 1 | 2 | 3 | null>(null);
   const getData = async () => {
     try {
       console.log("Get data");
       const token = await AsyncStorage.getItem("token");
-      console.log();
 
       console.log(token);
       if (!token) {
@@ -56,13 +56,55 @@ const PresensiMasuk = () => {
       console.log(error);
     }
   };
+  const pulang = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        setError("Token not found. Please login.");
+        setLoading(false);
+        return;
+      }
+      const leaveStatus = is_leave !== null ? is_leave : 0;
+      axios
+        .post(
+          "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/clockout",
+          {
+            is_leave: leaveStatus,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Note added successfully:");
+          setLoading(false);
+          router.push("/(tabs)/home");
+        })
+        .catch((error) => {
+          console.log(token);
+          console.error("Error adding note:", error);
+          setError("Failed to add note.");
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+      setError("An unexpected error occurred.");
+      setLoading(false);
+    }
+  };
   useFocusEffect(
     React.useCallback(() => {
       getData();
     }, [])
   );
   const handleStatusButtonPress = (status: any) => {
-    setIsStatusButtonPressed(status); // Mengubah status tombol yang diklik
+    setIsStatusButtonPressed(status);
+    setIs_leave(
+      status === "H" ? 1 : status === "I" ? 2 : status === "S" ? 3 : 0
+    );
   };
 
   return (
@@ -116,7 +158,7 @@ const PresensiMasuk = () => {
           <Text style={styles.statusButtonText}>S</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.backButton}>
+      <TouchableOpacity style={styles.backButton} onPress={() => pulang()}>
         <Text style={styles.presenceButtonText}>Continue</Text>
       </TouchableOpacity>
       <TouchableOpacity

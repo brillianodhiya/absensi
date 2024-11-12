@@ -1,8 +1,60 @@
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Header from "@/components/Header";
+import axios from "axios";
+import { useFocusEffect } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const dataKelas = () => {
+  const [userData, setUserData] = useState({
+    nama: "",
+    nisn: "",
+    kelas: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [IsModalOpen, setIsModalOpen] = useState(false);
+
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const token = await AsyncStorage.getItem("token");
+
+      console.log(token);
+      if (!token) {
+        setError("Token not found. Please login.");
+        setLoading(false);
+        return;
+      }
+      axios
+        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUserData({
+            nama: response.data.data.nama,
+            nisn: response.data.data.nisn,
+            kelas: response.data.data.kelas,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setError("Failed to fetch user data.");
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="DATA SISWA" />
@@ -10,32 +62,12 @@ const dataKelas = () => {
         <View style={styles.ListItem}>
           <Text style={styles.textHeader}>NISN </Text>
           <Text style={styles.textHeader}>Nama </Text>
-          <Text style={styles.textHeader}>Password</Text>
+          <Text style={styles.textHeader}>Kelas</Text>
         </View>
         <View style={styles.ListItem}>
-          <Text style={styles.ListText}>10001</Text>
-          <Text style={styles.ListText}>Ahmad Zainuri</Text>
-          <Text style={styles.ListText}>XRPLA01</Text>
-        </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>10002</Text>
-          <Text style={styles.ListText}>Bimasakti</Text>
-          <Text style={styles.ListText}>XRPLA02</Text>
-        </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>10003</Text>
-          <Text style={styles.ListText}>Cinta Laura</Text>
-          <Text style={styles.ListText}>XRPLA03</Text>
-        </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>10004</Text>
-          <Text style={styles.ListText}>Diah Ayu</Text>
-          <Text style={styles.ListText}>XRPLA04</Text>
-        </View>
-        <View style={styles.ListItem}>
-          <Text style={styles.ListText}>10005</Text>
-          <Text style={styles.ListText}>Egi Sunandar</Text>
-          <Text style={styles.ListText}>XRPLA05</Text>
+          <Text style={styles.ListText}>{userData.nisn}</Text>
+          <Text style={styles.ListText}>{userData.nama}</Text>
+          <Text style={styles.ListText}>{userData.kelas}</Text>
         </View>
       </View>
     </SafeAreaView>

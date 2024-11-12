@@ -1,6 +1,5 @@
 import {
   SafeAreaView,
-  Image,
   StyleSheet,
   Text,
   View,
@@ -109,8 +108,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C8EDEE",
   },
-
-  
 
   body: {
     marginTop: 30,
