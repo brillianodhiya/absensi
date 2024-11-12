@@ -19,7 +19,7 @@ const dataKelas = () => {
       return;
     }
     axios
-      .get("https://px973nrz-3000.asse.devtunnels.ms/users/showAll_profile", {
+      .get("https://px973nrz-3000.asse.devtunnels.ms/master_kelas/show_kelas", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -66,8 +66,8 @@ const dataKelas = () => {
           data.map((item, index) => {
             return (
               <View key={index} style={styles.ListItem}>
-                <Text style={styles.ListText}>{item.kelas.nama_kelas}</Text>
-                <Text style={styles.ListText}>{item.nama}</Text>
+                <Text style={styles.ListText}>{item.nama_kelas}</Text>
+                <Text style={styles.ListText}>{item.wali.nama}</Text>
               </View>
             );
           })
