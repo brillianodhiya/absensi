@@ -1,8 +1,48 @@
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Header from "@/components/Header";
+import { useFocusEffect } from "expo-router";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const dataKelas = () => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any[]>([]);
+
+  const getData = async () => {
+    setLoading(true);
+    const token = await AsyncStorage.getItem("token");
+
+    if (!token) {
+      setError("Token not found. Please login.");
+      setLoading(false);
+      return;
+    }
+    axios
+      .get("https://px973nrz-3000.asse.devtunnels.ms/users/showAll_profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        console.log(data);
+        setData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        setError("Failed to fetch user data.");
+        setLoading(false);
+      });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="DATA SISWA" />

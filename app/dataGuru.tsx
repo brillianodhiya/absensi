@@ -26,6 +26,7 @@ const DataSiswa = () => {
   const [loading, setLoading] = useState(true);
 
   const getData = async () => {
+    setLoading(true);
     const token = await AsyncStorage.getItem("token");
 
     if (!token) {
@@ -47,7 +48,7 @@ const DataSiswa = () => {
           nama: data.nama,
           kelas: data.kelas,
           nip: data.nip,
-          mapel: data.mapel,//tambahan mapel
+          mapel: data.mapel, //tambahan mapel
         });
         setLoading(false);
       })
@@ -73,24 +74,33 @@ const DataSiswa = () => {
           <View style={styles.row}>
             <Text style={styles.infoText}>NISN</Text>
             <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{userData.nisn || "-"}</Text>
+            <Text style={styles.isiText}>
+              {loading ? "Loading..." : userData.nisn || "-"}
+            </Text>
           </View>
         ) : userData.role === "guru" ? (
           <View style={styles.row}>
             <Text style={styles.infoText}>NIP</Text>
             <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{userData.nip || "-"}</Text>
+            <Text style={styles.isiText}>
+              {loading ? "Loading..." : userData.nip || "-"}
+            </Text>
           </View>
         ) : null}
         <View style={styles.row}>
           <Text style={styles.infoText}>Nama</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>{userData.nama}</Text>
+          <Text style={styles.isiText}>
+            {loading ? "Loading..." : userData.nama}
+          </Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Mapel</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>{userData.mapel}</Text> //mengubah dr kelas mjd  mapel
+          <Text style={styles.isiText}>
+            {loading ? "Loading..." : userData.mapel}
+          </Text>
+          {/* //mengubah dr kelas mjd  mapel */}
         </View>
       </View>
       <TouchableOpacity
