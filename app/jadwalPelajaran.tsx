@@ -1,20 +1,73 @@
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import Header from "@/components/Header";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { useFocusEffect } from "expo-router";
 
 const JadwalPelajaran = () => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [IsModalOpen, setIsModalOpen] = useState(false);
+  const [jadwal, setJadwal] = useState({
+    nama_pelajaran: "",
+    jam: "",
+    materi: "",
+    kelas: "",
+  });
+  const getJadwal = async () => {
+    try {
+      setLoading(true);
+      const token = await AsyncStorage.getItem("token");
+
+      console.log(token);
+      if (!token) {
+        setError("Token not found. Please login.");
+        setLoading(false);
+        return;
+      }
+      axios
+        .get(
+          "https://px973nrz-3000.asse.devtunnels.ms/jadwal_kelas/show_jadwal",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          setJadwal({
+            nama_pelajaran: response.data.data.nama_pelajaran,
+            jam: response.data.data.jam,
+            materi: response.data.data.materi,
+            kelas: response.data.data.kelas,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setError("Failed to fetch user data.");
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      getJadwal();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.container}>
-      {/* Judul */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>JADWAL</Text>
-      </View>
+      <Header title="JADWAL" />
 
       {/* Data Jadwal */}
       <View style={styles.body}>
         <View style={styles.row}>
           <Text style={styles.infoText}>Kelas</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>X RPL A</Text>
+          <Text style={styles.isiText}>{jadwal.kelas}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Hari</Text>
@@ -29,17 +82,17 @@ const JadwalPelajaran = () => {
         <View style={styles.row}>
           <Text style={styles.infoText}>Jam ke</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>1-4</Text>
+          <Text style={styles.isiText}>{jadwal.jam}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Mapel</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Matematika</Text>
+          <Text style={styles.isiText}>{jadwal.nama_pelajaran}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Materi</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Algoritma</Text>
+          <Text style={styles.isiText}>{jadwal.materi}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Jam ke</Text>
@@ -69,15 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#C8EDEE", // Warna latar belakang
     paddingHorizontal: 20,
     paddingTop: 50,
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  headerText: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "black",
   },
   body: {
     flex: 1,

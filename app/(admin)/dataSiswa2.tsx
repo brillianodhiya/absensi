@@ -45,8 +45,6 @@ const dataKelas = () => {
   );
   return (
     <SafeAreaView style={styles.Container}>
-      {/* Header dengan logo dan judul */}
-
       <Header title="DATA SISWA" />
       <View style={styles.ContainerList}>
         <View style={styles.ListItem}>

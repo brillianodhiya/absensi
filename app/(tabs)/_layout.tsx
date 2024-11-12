@@ -18,16 +18,6 @@ export default function TabLayout() {
         headerShown: false,
       }}
     >
-      {/* <Tabs.Screen
-        name="index"
-        options={{
-          href: null,
-          tabBarStyle: {
-            display: "none",
-          },
-        }}
-      /> */}
-
       <Tabs.Screen
         name="home"
         options={{
