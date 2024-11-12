@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Header from "@/components/Header";
 
 const PresensiMasuk = () => {
   const [userData, setUserData] = useState({
@@ -66,13 +67,7 @@ const PresensiMasuk = () => {
 
   return (
     <SafeAreaView style={styles.Container}>
-      <View style={styles.header}>
-        <Image
-          source={require("../assets/images/logo_smk-removebg-preview.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.textHeader}>PRESENSI</Text>
-      </View>
+      <Header title="PRESENSI" />
 
       <View style={styles.welcome}>
         <Text style={styles.welcomeText}>Masuk</Text>
@@ -121,7 +116,9 @@ const PresensiMasuk = () => {
           <Text style={styles.statusButtonText}>S</Text>
         </TouchableOpacity>
       </View>
-
+      <TouchableOpacity style={styles.backButton}>
+        <Text style={styles.presenceButtonText}>Continue</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.presenceButton}
         onPress={() => router.push("/(tabs)/catatan")}
@@ -201,6 +198,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 20,
     justifyContent: "center",
+  },
+  backButton: {
+    marginTop: 15,
+    alignItems: "center",
+    backgroundColor: "#FFB22C",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    width: "30%",
+    marginHorizontal: "auto",
   },
   statusButton: {
     backgroundColor: "#000",

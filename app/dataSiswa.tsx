@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Header from "@/components/Header";
 
 const DataSiswa = () => {
   const [userData, setUserData] = useState({
@@ -63,13 +64,7 @@ const DataSiswa = () => {
 
   return (
     <SafeAreaView style={styles.Container}>
-      <View style={styles.header}>
-        <Image
-          source={require("../assets/images/logo_smk-removebg-preview.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.textHeader}>DATA GURU</Text>
-      </View>
+      <Header title="DATA GURU" />
       <View style={styles.body}>
         {/* Tampilkan NISN jika role adalah "siswa", dan NIP jika role adalah "guru" */}
         {userData.role === "siswa" ? (
@@ -113,24 +108,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C8EDEE",
   },
-  header: {
-    flexDirection: "row",
-    marginTop: 45,
-  },
-  textHeader: {
-    fontSize: 28,
-    color: "black",
-    fontWeight: "bold",
-    justifyContent: "center",
-    marginTop: 10,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 20,
-    marginRight: 35,
-    marginLeft: 20,
-  },
+
   body: {
     marginTop: 30,
   },

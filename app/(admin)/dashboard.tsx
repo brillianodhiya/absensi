@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router, useFocusEffect } from "expo-router";
@@ -61,13 +61,7 @@ const dashboardUser = () => {
   );
   return (
     <SafeAreaView style={styles.Container}>
-      <View style={styles.header}>
-        <Image
-          source={require("../../assets/images/logosmk2.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.textHeader}>DASHBOARD</Text>
-      </View>
+      <Header title="DASHBOARD" />
       <View style={styles.body}>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
         <Text style={styles.username}>{userData.nama}</Text>
