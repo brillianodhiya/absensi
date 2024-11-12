@@ -8,8 +8,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const dataKelas = () => {
   const [userData, setUserData] = useState({
     nama: "",
-    nisn: "",
     kelas: "",
+    nisn: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -35,8 +35,8 @@ const dataKelas = () => {
         .then((response) => {
           setUserData({
             nama: response.data.data.nama,
-            nisn: response.data.data.nisn,
             kelas: response.data.data.kelas,
+            nisn: response.data.data.nisn,
           });
           setLoading(false);
         })
@@ -49,12 +49,12 @@ const dataKelas = () => {
       console.log(error);
     }
   };
-
   useFocusEffect(
     React.useCallback(() => {
       getData();
     }, [])
   );
+
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="DATA SISWA" />
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   Container: {
     flex: 1,
-    backgroundColor: "#C8EDEE", 
+    backgroundColor: "#C8EDEE",
   },
 
   textHeader: {
