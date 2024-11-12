@@ -1,13 +1,11 @@
 import {
   SafeAreaView,
-  Image,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -69,7 +67,6 @@ const DataSiswa = () => {
     <SafeAreaView style={styles.Container}>
       <Header title="DATA GURU" />
       <View style={styles.body}>
-        {/* Tampilkan NISN jika role adalah "siswa", dan NIP jika role adalah "guru" */}
         {userData.role === "siswa" ? (
           <View style={styles.row}>
             <Text style={styles.infoText}>NISN</Text>

@@ -67,19 +67,10 @@ const catatan = () => {
         return;
       }
 
-      // Mengambil `id_user` dari AsyncStorage atau state, sesuai kebutuhan Anda
-      // const id_user = await AsyncStorage.getItem("id"); // Sesuaikan ini jika `id_user` diambil dari tempat lain
-      // if (!id_user) {
-      //   setError("User ID not found.");
-      //   setLoading(false);
-      //   return;
-      // }
-
       axios
         .post(
           "https://px973nrz-3000.asse.devtunnels.ms/catatan/make_catatan",
           {
-            // id_user: id_user,
             isi_catatan: isi_catatan,
           },
           {

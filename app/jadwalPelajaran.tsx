@@ -36,11 +36,12 @@ const JadwalPelajaran = () => {
           }
         )
         .then((response) => {
+          const data = response.data.data;
           setJadwal({
-            nama_pelajaran: response.data.data.nama_pelajaran,
-            jam: response.data.data.jam,
-            materi: response.data.data.materi,
-            kelas: response.data.data.kelas,
+            nama_pelajaran: data.nama_pelajaran,
+            jam: data.jam,
+            materi: data.materi,
+            kelas: data.kelas,
           });
           setLoading(false);
         })
@@ -72,7 +73,7 @@ const JadwalPelajaran = () => {
         <View style={styles.row}>
           <Text style={styles.infoText}>Hari</Text>
           <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Senin</Text>
+          <Text style={styles.isiText}>Rabu</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.infoText}>Tanggal</Text>
@@ -93,21 +94,6 @@ const JadwalPelajaran = () => {
           <Text style={styles.infoText}>Materi</Text>
           <Text style={styles.separator}>:</Text>
           <Text style={styles.isiText}>{jadwal.materi}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>Jam ke</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>5-10</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>Mapel</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Dasar-Dasar Keahlian</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>Materi</Text>
-          <Text style={styles.separator}>:</Text>
-          <Text style={styles.isiText}>Pemrograman Web</Text>
         </View>
       </View>
     </SafeAreaView>
