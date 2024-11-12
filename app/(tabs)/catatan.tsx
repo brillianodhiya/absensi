@@ -60,7 +60,6 @@ const catatan = () => {
   const handleCtn = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      console.log();
 
       if (!token) {
         setError("Token not found. Please login.");
@@ -69,18 +68,18 @@ const catatan = () => {
       }
 
       // Mengambil `id_user` dari AsyncStorage atau state, sesuai kebutuhan Anda
-      const id_user = await AsyncStorage.getItem("id"); // Sesuaikan ini jika `id_user` diambil dari tempat lain
-      if (!id_user) {
-        setError("User ID not found.");
-        setLoading(false);
-        return;
-      }
+      // const id_user = await AsyncStorage.getItem("id"); // Sesuaikan ini jika `id_user` diambil dari tempat lain
+      // if (!id_user) {
+      //   setError("User ID not found.");
+      //   setLoading(false);
+      //   return;
+      // }
 
       axios
         .post(
           "https://px973nrz-3000.asse.devtunnels.ms/catatan/make_catatan",
           {
-            id_user: id_user,
+            // id_user: id_user,
             isi_catatan: isi_catatan,
           },
           {
@@ -95,6 +94,7 @@ const catatan = () => {
           setLoading(false);
         })
         .catch((error) => {
+          console.log(token);
           console.error("Error adding note:", error);
           setError("Failed to add note.");
           setLoading(false);
@@ -112,7 +112,7 @@ const catatan = () => {
   );
   return (
     <SafeAreaView style={styles.Container}>
-      <Header title="CATATAN"/>
+      <Header title="CATATAN" />
       <View style={styles.infoContainer}>
         <View style={styles.row}>
           <View style={styles.body}>

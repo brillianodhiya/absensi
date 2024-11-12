@@ -7,18 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
+import Header from "@/components/Header";
 
 const adminpresensi = () => {
   return (
     <SafeAreaView style={styles.Container}>
-      {/* Header dengan logo dan judul */}
-      <View style={styles.header}>
-        <Image
-          source={require("../assets/images/logosmk2.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.textHeader}>ADMIN PRESENSI</Text>
-      </View>
+      <Header title="ADMIN PRESENSI" />
       <View style={styles.ListText}>
         <Text style={styles.ListText}>Nama : Estri Handayani</Text>
         <Text style={styles.ListText}>Status : Guru</Text>
@@ -53,28 +47,11 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     justifyContent: "center",
     marginBottom: 4,
-    paddingLeft :20,
+    paddingLeft: 20,
   },
   Container: {
     flex: 1,
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
-  },
-  header: {
-    flexDirection: "row",
-  },
-  textHeader: {
-    fontSize: 20,
-    color: "black",
-    fontWeight: "bold",
-    justifyContent: "center",
-    marginTop: 5,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-    marginRight: 60,
-    marginLeft: 20,
   },
   listContainer: {
     padding: 10,
