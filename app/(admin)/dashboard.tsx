@@ -67,7 +67,7 @@ const dashboardUser = () => {
         <Text style={styles.username}>{userData.nama}</Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/dataSiswa")}
+          onPress={() => router.push("/(admin)dataGuru")}
         >
           <Text style={styles.buttonText}> Data Guru</Text>
         </TouchableOpacity>
