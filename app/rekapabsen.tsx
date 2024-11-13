@@ -20,11 +20,15 @@ const statusColors = {
   Izin: "#fcb900",
   Alfa: "#00bcd4",
 };
-
+type AttendanceItem = {
+  name: string;
+  description: string;
+  status: keyof typeof statusColors;
+};
 const RekapData = () => {
   const [data, setData] = useState([]); // State untuk menyimpan data yang diambil
   const [loading, setLoading] = useState(true); // State untuk mengontrol tampilan loading
-  const [error, setError] = useState(null); // State untuk menangani error jika terjadi
+  const [error, setError] = useState<string | null>(null); // State untuk menangani error jika terjadi
 
   useEffect(() => {
     // Fungsi untuk mengambil data dari backend
@@ -32,7 +36,7 @@ const RekapData = () => {
       try {
         // Permintaan GET ke API
         const response = await axios.get(
-          "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/RekapAbsensi"
+          "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/rekap_masuk"
         ); // Ganti dengan URL API backend Anda
         setData(response.data); // Menyimpan data dari API ke state `data`
       } catch (err) {
@@ -45,19 +49,23 @@ const RekapData = () => {
     fetchData(); // Memanggil fungsi `fetchData` ketika komponen pertama kali dimuat
   }, []);
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: AttendanceItem }) => (
     <View style={styles.itemContainer}>
       <View>
-        <Text style={styles.nameText}>{item.name}</Text>
-        <Text style={styles.descriptionText}>{item.description}</Text>
+        <Text style={styles.nameText}>{item.name || "Tidak ada nama"}</Text>
+        <Text style={styles.descriptionText}>
+          {item.description || "Tidak ada deskripsi"}
+        </Text>
       </View>
       <View
         style={[
           styles.statusContainer,
-          { backgroundColor: statusColors[item.status] },
+          { backgroundColor: statusColors[item.status] || "#ddd" },
         ]}
       >
-        <Text style={styles.statusText}>{item.status}</Text>
+        <Text style={styles.statusText}>
+          {item.status || "Tidak ada status"}
+        </Text>
       </View>
     </View>
   );
@@ -201,6 +209,10 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     marginLeft: 5,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: "#00796b",
   },
   filterButton: {
     flexDirection: "row",
