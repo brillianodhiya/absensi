@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   SafeAreaView,
   StyleSheet,
@@ -7,15 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "@/components/Header";
-const data = [
-  { name: "Nama Siswa", status: "Hadir" },
-  { name: "Nama Siswa", status: "Sakit" },
-  { name: "Nama Siswa", status: "Izin" },
-  { name: "Nama Siswa", status: "Alfa" },
-];
+import axios from "axios";
 
 // Status colors based on type
 const statusColors = {
@@ -24,19 +20,52 @@ const statusColors = {
   Izin: "#fcb900",
   Alfa: "#00bcd4",
 };
+type AttendanceItem = {
+  name: string;
+  description: string;
+  status: keyof typeof statusColors;
+};
 const RekapData = () => {
-  const renderItem = ({ item }: { item: any }) => (
+  const [data, setData] = useState([]); // State untuk menyimpan data yang diambil
+  const [loading, setLoading] = useState(true); // State untuk mengontrol tampilan loading
+  const [error, setError] = useState<string | null>(null); // State untuk menangani error jika terjadi
+
+  useEffect(() => {
+    // Fungsi untuk mengambil data dari backend
+    const fetchData = async () => {
+      try {
+        // Permintaan GET ke API
+        const response = await axios.get(
+          "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/rekap_masuk"
+        ); // Ganti dengan URL API backend Anda
+        setData(response.data); // Menyimpan data dari API ke state `data`
+      } catch (err) {
+        setError("Gagal mengambil data"); // Menyimpan pesan error jika terjadi kesalahan
+      } finally {
+        setLoading(false); // Mengubah state `loading` menjadi false setelah data diambil atau terjadi error
+      }
+    };
+
+    fetchData(); // Memanggil fungsi `fetchData` ketika komponen pertama kali dimuat
+  }, []);
+
+  const renderItem = ({ item }: { item: AttendanceItem }) => (
     <View style={styles.itemContainer}>
       <View>
-        <Text style={styles.nameText}>{item.name}</Text>
+        <Text style={styles.nameText}>{item.name || "Tidak ada nama"}</Text>
+        <Text style={styles.descriptionText}>
+          {item.description || "Tidak ada deskripsi"}
+        </Text>
       </View>
       <View
         style={[
           styles.statusContainer,
-          { backgroundColor: statusColors[item.status] },
+          { backgroundColor: statusColors[item.status] || "#ddd" },
         ]}
       >
-        <Text style={styles.statusText}>{item.status}</Text>
+        <Text style={styles.statusText}>
+          {item.status || "Tidak ada status"}
+        </Text>
       </View>
     </View>
   );
@@ -44,6 +73,8 @@ const RekapData = () => {
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="REKAP ABSEN" />
+
+      {/* Bagian Informasi dan Tombol Pencarian & Filter */}
       <View style={styles.infoContainer}>
         <View style={styles.row}>
           <View style={styles.body}>
@@ -63,6 +94,7 @@ const RekapData = () => {
           </View>
         </View>
       </View>
+
       <View style={styles.header2}>
         <View style={styles.searchBox}>
           <TextInput
@@ -78,18 +110,30 @@ const RekapData = () => {
           />
         </View>
 
-        {/* Filter Button */}
+        {/* Tombol Filter */}
         <TouchableOpacity style={styles.filterButton}>
           <Ionicons name="filter" size={20} color="#00C853" />
           <Text style={styles.filterText}>Filter</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={styles.listContainer}
-      />
+
+      {/* Tampilkan loading atau data */}
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color="#00bcd4"
+          style={styles.loading}
+        />
+      ) : error ? (
+        <Text style={styles.error}>{error}</Text>
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.listContainer}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -115,7 +159,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     marginHorizontal: 25,
-    marginBottom: 30,
+    marginBottom: 10,
     marginTop: 25,
   },
   row: {
@@ -146,6 +190,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
+    marginBottom: 10,
   },
   searchBox: {
     flex: 1,
@@ -164,6 +209,10 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     marginLeft: 5,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: "#00796b",
   },
   filterButton: {
     flexDirection: "row",
@@ -205,5 +254,15 @@ const styles = StyleSheet.create({
   statusText: {
     color: "white",
     fontWeight: "bold",
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
+    marginTop: 20,
   },
 });

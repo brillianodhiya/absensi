@@ -5,8 +5,14 @@ import axios from "axios";
 import { useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+type UserProfile = {
+  nama: string;
+  nisn: string;
+  kelas: string;
+};
+
 const DataKelas = () => {
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState<UserProfile[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -29,11 +35,13 @@ const DataKelas = () => {
         })
         .then((response) => {
           if (response.data && response.data.data) {
-            const profiles = response.data.data.map((data: any) => ({
-              nama: data.nama,
-              nisn: data.nisn,
-              kelas: data.kelas ? data.kelas.nama_kelas : "N/A",
-            }));
+            const profiles: UserProfile[] = response.data.data.map(
+              (data: any) => ({
+                nama: data.nama,
+                nisn: data.nisn,
+                kelas: data.kelas ? data.kelas.nama_kelas : "N/A",
+              })
+            );
             setUserData(profiles);
           }
           setLoading(false);
@@ -55,19 +63,19 @@ const DataKelas = () => {
   );
 
   return (
-    <SafeAreaView style={styles.Container}>
+    <SafeAreaView style={styles.container}>
       <Header title="DATA SISWA" />
-      <View style={styles.ContainerList}>
-        <View style={styles.ListItem}>
-          <Text style={styles.textHeader}>NISN </Text>
-          <Text style={styles.textHeader}>Nama </Text>
+      <View style={styles.containerList}>
+        <View style={styles.headerRow}>
+          <Text style={styles.textHeader}>NISN</Text>
+          <Text style={styles.textHeader}>Nama</Text>
           <Text style={styles.textHeader}>Kelas</Text>
         </View>
         {userData.map((user, index) => (
-          <View key={index} style={styles.ListItem}>
-            <Text style={styles.ListText}>{user.nisn}</Text>
-            <Text style={styles.ListText}>{user.nama}</Text>
-            <Text style={styles.ListText}>{user.kelas}</Text>
+          <View key={index} style={styles.listItem}>
+            <Text style={styles.listText}>{user.nisn}</Text>
+            <Text style={styles.listText}>{user.nama}</Text>
+            <Text style={styles.listText}>{user.kelas}</Text>
           </View>
         ))}
       </View>
@@ -78,42 +86,48 @@ const DataKelas = () => {
 export default DataKelas;
 
 const styles = StyleSheet.create({
-  ContainerList: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "#f8f8f8",
-    paddingLeft: 20,
-    paddingRight: 20,
-    justifyContent: "center",
-  },
-  ListItem: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-  ListText: {
-    fontSize: 18,
-    color: "blue",
-    fontWeight: "normal",
-    justifyContent: "center",
-    marginBottom: 4,
-  },
-  Container: {
+  container: {
     flex: 1,
     backgroundColor: "#C8EDEE",
   },
-
+  containerList: {
+    backgroundColor: "#f8f8f8",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: "#ddd",
+    marginBottom: 10,
+  },
   textHeader: {
-    fontSize: 28,
+    fontSize: 20,
     color: "black",
     fontWeight: "bold",
-    justifyContent: "center",
-    marginTop: 10,
+    textAlign: "center",
+    flex: 1,
   },
-  listContainer: {
-    padding: 10,
+  listItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    marginBottom: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  listText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    flex: 1,
   },
 });
