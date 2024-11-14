@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -7,12 +7,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import Header from "@/components/Header";
 const Home = () => {
+  const checkPresensiStatus = async () => {
+    const presensiMasukActive = await AsyncStorage.getItem(
+      "presensiMasukActive"
+    );
+    if (presensiMasukActive === "true") {
+      Alert.alert("Presensi masuk telah dibuka");
+      await AsyncStorage.removeItem("presensiMasukActive");
+    }
+  };
+
   const [userData, setUserData] = useState({
     nama: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [IsModalOpen, setIsModalOpen] = useState(false);
 
   const getData = async () => {
     try {
@@ -60,6 +69,7 @@ const Home = () => {
   useFocusEffect(
     React.useCallback(() => {
       getData();
+      checkPresensiStatus();
     }, [])
   );
   return (

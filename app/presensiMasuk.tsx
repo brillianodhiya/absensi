@@ -176,11 +176,9 @@ const PresensiMasuk = () => {
           <Text style={styles.statusButtonText}>S</Text>
         </TouchableOpacity>
       </View>
-
       <TouchableOpacity style={styles.backButton} onPress={() => masuk()}>
         <Text style={styles.presenceButtonText}>Continue</Text>
       </TouchableOpacity>
-
     </SafeAreaView>
   );
 };

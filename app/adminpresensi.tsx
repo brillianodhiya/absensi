@@ -5,19 +5,72 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Header from "@/components/Header";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "expo-router";
 
 const adminpresensi = () => {
+  const [userData, setUserData] = useState({
+    nama: "",
+    role: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const token = await AsyncStorage.getItem("token");
+
+      console.log(token);
+      if (!token) {
+        setError("Token not found. Please login.");
+        setLoading(false);
+        return;
+      }
+      axios
+        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUserData({
+            nama: response.data.data.nama,
+            role: response.data.data.role,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setError("Failed to fetch user data.");
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const activateCheckIn = async () => {
+    await AsyncStorage.setItem("presensiMasukActive", "true");
+    Alert.alert("Presensi masuk telah dibuka");
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="ADMIN PRESENSI" />
       <View style={styles.ListText}>
-        <Text style={styles.ListText}>Nama : Estri Handayani</Text>
-        <Text style={styles.ListText}>Status : Guru</Text>
+        <Text style={styles.ListText}>Nama : {userData.nama}</Text>
+        <Text style={styles.ListText}>Status : {userData.role}</Text>
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={activateCheckIn}>
         <Text style={styles.buttonText}>🏠 Aktifkan Absen Masuk</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
