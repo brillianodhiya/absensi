@@ -12,7 +12,6 @@ const dashboardUser = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [IsModalOpen, setIsModalOpen] = useState(false);
 
   const getData = async () => {
     try {
