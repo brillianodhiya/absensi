@@ -24,7 +24,7 @@ Sebelum memulai, pastikan sistem Anda memenuhi persyaratan berikut:
 ### 1. Clone Project dari Git
 ```bash
 # Clone repository
-git clone <url-repository-anda>
+git clone https://github.com/brillianodhiya/absensi.git
 
 # Masuk ke direktori project
 cd nama-project
