@@ -58,6 +58,10 @@ const adminpresensi = () => {
     await AsyncStorage.setItem("presensiMasukActive", "true");
     Alert.alert("Presensi masuk telah dibuka");
   };
+  const activateCheckOut = async () => {
+    await AsyncStorage.setItem("presensiMasukActive", "true");
+    Alert.alert("Presensi pulang telah dibuka");
+  };
   useFocusEffect(
     React.useCallback(() => {
       getData();
@@ -73,7 +77,7 @@ const adminpresensi = () => {
       <TouchableOpacity style={styles.button} onPress={activateCheckIn}>
         <Text style={styles.buttonText}>🏠 Aktifkan Absen Masuk</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={activateCheckOut}>
         <Text style={styles.buttonText}>🏠 Aktifkan Absen Pulang</Text>
       </TouchableOpacity>
     </SafeAreaView>

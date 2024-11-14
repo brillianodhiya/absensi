@@ -11,9 +11,17 @@ const Home = () => {
     const presensiMasukActive = await AsyncStorage.getItem(
       "presensiMasukActive"
     );
+    const presensiPulangActive = await AsyncStorage.getItem(
+      "presensiPulangActive"
+    );
+
     if (presensiMasukActive === "true") {
       Alert.alert("Presensi masuk telah dibuka");
       await AsyncStorage.removeItem("presensiMasukActive");
+    }
+    if (presensiPulangActive === "true") {
+      Alert.alert("Presensi pulang telah dibuka");
+      await AsyncStorage.removeItem("presensiPulangActive");
     }
   };
 
