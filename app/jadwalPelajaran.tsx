@@ -4,6 +4,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import Header from "@/components/Header";
@@ -11,12 +12,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect } from "expo-router";
 
+// Definisikan tipe data yang sesuai dengan struktur data yang diterima
+interface Jadwal {
+  kelas: string;
+  jam: string;
+  jam_selesai: string;
+  nama_pelajaran: string;
+  materi: string;
+}
+
+interface HariData {
+  hari: string;
+  jadwal: Jadwal[];
+}
+
 const JadwalPelajaran = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any[]>([]);
-  const [kelas, setKelas] = useState<string>("");
-  const [hari, setHari] = useState<string>("");
+  const [data, setData] = useState<HariData[]>([]); // Tipe data disesuaikan dengan HariData[]
 
   const getData = async () => {
     setLoading(true);
@@ -37,14 +50,8 @@ const JadwalPelajaran = () => {
         }
       )
       .then((response) => {
-        const data = response.data.data;
-
-        // Set kelas dan hari hanya dari item pertama (asumsi semua item memiliki kelas dan hari yang sama)
-        if (data.length > 0) {
-          setKelas(data[0].kelas.nama_kelas);
-          setHari(data[0].hariDetails.hari);
-        }
-
+        const data: HariData[] = response.data.data; // Tipe data disesuaikan
+        console.log(data); // Debugging output
         setData(data);
         setLoading(false);
       })
@@ -69,35 +76,42 @@ const JadwalPelajaran = () => {
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
-        <View style={styles.body}>
-          {/* Menampilkan Kelas dan Hari di luar mapping */}
-          <View style={styles.headerInfo}>
-            <Text style={styles.headerText}>Kelas: {kelas}</Text>
-            <Text style={styles.headerText}>Hari: {hari}</Text>
-          </View>
-
+        <ScrollView style={styles.body}>
           {data.map((item, index) => (
-            <View key={index} style={styles.card}>
-              <View style={styles.item}>
-                <Text style={styles.infoText}>Jam ke</Text>
-                <Text style={styles.separator}>:</Text>
-                <Text style={styles.isiText}>
-                  {item.jam}-{item.jam_selesai}
-                </Text>
-              </View>
-              <View style={styles.item}>
-                <Text style={styles.infoText}>Mapel</Text>
-                <Text style={styles.separator}>:</Text>
-                <Text style={styles.isiText}>{item.nama_pelajaran}</Text>
-              </View>
-              <View style={styles.item}>
-                <Text style={styles.infoText}>Materi</Text>
-                <Text style={styles.separator}>:</Text>
-                <Text style={styles.isiText}>{item.materi}</Text>
-              </View>
+            <View key={index} style={styles.daySection}>
+              {/* Tampilkan Hari */}
+              <Text style={styles.dayText}>{item.hari}</Text>
+
+              {/* Tampilkan Semua Jadwal untuk Hari Tersebut */}
+              {item.jadwal.map((jadwal, jadwalIndex) => (
+                <View key={jadwalIndex} style={styles.jadwalItem}>
+                  <View style={styles.row}>
+                    <Text style={styles.infoText}>Kelas</Text>
+                    <Text style={styles.separator}>:</Text>
+                    <Text style={styles.isiText}>{jadwal.kelas}</Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.infoText}>Jam</Text>
+                    <Text style={styles.separator}>:</Text>
+                    <Text style={styles.isiText}>
+                      {jadwal.jam} - {jadwal.jam_selesai}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.infoText}>Mapel</Text>
+                    <Text style={styles.separator}>:</Text>
+                    <Text style={styles.isiText}>{jadwal.nama_pelajaran}</Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.infoText}>Materi</Text>
+                    <Text style={styles.separator}>:</Text>
+                    <Text style={styles.isiText}>{jadwal.materi}</Text>
+                  </View>
+                </View>
+              ))}
             </View>
           ))}
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
@@ -115,42 +129,42 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
   },
-  headerInfo: {
-    marginBottom: 15,
+  daySection: {
+    marginBottom: 20,
   },
-  headerText: {
-    fontSize: 20,
+  dayText: {
+    fontSize: 22,
     fontWeight: "bold",
-    color: "black",
-    textAlign: "center",
+    color: "#333",
+    marginBottom: 10,
   },
-  card: {
+  jadwalItem: {
+    backgroundColor: "#fff",
     padding: 15,
     borderRadius: 8,
-    marginBottom: 15,
+    marginBottom: 10,
   },
-  item: {
+  row: {
     flexDirection: "row",
+    alignItems: "center",
     marginBottom: 5,
   },
   infoText: {
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: "bold",
+    width: 100,
     color: "black",
-    width: 80,
-    marginTop: 20,
   },
   separator: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     marginHorizontal: 5,
     color: "black",
-    marginTop: 20,
   },
   isiText: {
-    fontSize: 22,
+    fontSize: 16,
+    flex: 1,
     color: "black",
-    marginTop: 20,
   },
   errorText: {
     fontSize: 18,

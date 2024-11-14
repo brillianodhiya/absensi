@@ -181,13 +181,6 @@ const PresensiMasuk = () => {
         <Text style={styles.presenceButtonText}>Continue</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.presenceButton}
-        onPress={() => router.push("/(tabs)/catatan")}
-      >
-        <Ionicons name="create-outline" size={20} color="white" />
-        <Text style={styles.presenceButtonText}>CATATAN PRESENSI</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
