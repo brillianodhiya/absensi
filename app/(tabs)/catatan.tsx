@@ -96,6 +96,7 @@ const catatan = () => {
       setLoading(false);
     }
   };
+
   useFocusEffect(
     React.useCallback(() => {
       getData();
