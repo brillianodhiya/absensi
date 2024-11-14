@@ -1,4 +1,4 @@
-# Panduan Lengkap Instalasi dan Menjalankan Aplikasi Expo
+# 1. Panduan Lengkap Instalasi dan Menjalankan Aplikasi Expo
 
 ## Prasyarat
 Sebelum memulai, pastikan sistem Anda memenuhi persyaratan berikut:
@@ -129,7 +129,7 @@ npx expo start -c
 
 
 
-# Panduan Build Aplikasi Menggunakan EAS Build
+# 2. Panduan Build Aplikasi Menggunakan EAS Build
 
 ## Prasyarat
 - Node.js versi 14.0 atau lebih tinggi
@@ -288,3 +288,218 @@ eas credentials
 # Melihat status build
 eas build:status
 ```
+
+
+# 3. Panduan Lengkap EAS Update untuk Expo (Jika terjadi perubahan kecil)
+
+## Pengenalan EAS Update
+EAS Update memungkinkan Anda untuk memperbarui aplikasi JavaScript, TypeScript, dan aset secara over-the-air (OTA) tanpa perlu mengirimkan build baru ke App Store atau Play Store.
+
+## Prasyarat
+1. Node.js versi 16.0.0 atau lebih tinggi
+2. Akun Expo yang sudah terverifikasi
+3. EAS CLI terinstal secara global
+   ```bash
+   npm install -g eas-cli
+   ```
+4. Project Expo yang sudah dikonfigurasi dengan EAS Build
+
+## Langkah-langkah Setup
+
+### 1. Login ke Akun Expo
+```bash
+eas login
+```
+
+### 2. Konfigurasi EAS Update
+Tambahkan konfigurasi berikut di `app.json`:
+```json
+{
+  "expo": {
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 0
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
+  }
+}
+```
+
+### 3. Konfigurasi eas.json
+```json
+{
+  "cli": {
+    "version": ">= 3.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development"
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview"
+    },
+    "production": {
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
+```
+
+## Cara Menggunakan EAS Update
+
+### 1. Membuat Update
+```bash
+# Update untuk channel development
+eas update --branch development
+
+# Update untuk channel preview
+eas update --branch preview
+
+# Update untuk channel production
+eas update --branch production
+```
+
+### 2. Menentukan Branch dan Channel
+```bash
+# Update spesifik branch dengan message
+eas update --branch [nama-branch] --message "Deskripsi update"
+
+# Update dengan platform spesifik
+eas update --branch [nama-branch] --platform android
+eas update --branch [nama-branch] --platform ios
+```
+
+### 3. Manajemen Update
+```bash
+# Melihat daftar update
+eas update:list
+
+# Melihat detail update spesifik
+eas update:view [UPDATE_ID]
+
+# Membatalkan rollout update
+eas update:rollback
+```
+
+## Strategi Update
+
+### 1. Development Updates
+- Gunakan untuk testing fitur baru
+- Update lebih sering
+- Terbatas pada pengguna internal
+```bash
+eas update --branch development --message "Testing fitur baru"
+```
+
+### 2. Preview Updates
+- Untuk testing pre-release
+- Distribusi terbatas
+- QA dan beta testing
+```bash
+eas update --branch preview --message "Beta testing v1.2.0"
+```
+
+### 3. Production Updates
+- Update untuk pengguna akhir
+- Perlu testing menyeluruh
+- Rollout bertahap
+```bash
+eas update --branch production --message "Perbaikan bug dan peningkatan performa"
+```
+
+## Konfigurasi Lanjutan
+
+### 1. Runtime Version
+Di `app.json`:
+```json
+{
+  "expo": {
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}
+```
+
+### 2. Update Kebijakan
+```json
+{
+  "expo": {
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD"
+    }
+  }
+}
+```
+
+## Troubleshooting
+
+### 1. Masalah Update Gagal
+```bash
+# Cek status update
+eas update:list
+
+# Verifikasi konfigurasi
+eas update:configure
+```
+
+### 2. Masalah Runtime Version
+- Pastikan runtime version sesuai di app.json
+- Cek compatibility dengan SDK Expo
+
+### 3. Cache Issues
+```bash
+# Clear update cache
+expo-updates clearUpdateCacheAsync()
+```
+
+## Tips dan Best Practices
+
+1. **Testing Update**
+   - Selalu test update di development/preview channel
+   - Gunakan berbagai device untuk testing
+   - Verifikasi backward compatibility
+
+2. **Version Control**
+   - Gunakan git tags untuk tracking updates
+   - Dokumentasikan perubahan di commit message
+   - Simpan backup sebelum update besar
+
+3. **Monitoring**
+   - Pantau metrics di Expo dashboard
+   - Cek error reports
+   - Monitor user feedback
+
+4. **Rollout Strategy**
+   - Mulai dengan rollout terbatas
+   - Tingkatkan secara bertahap
+   - Siapkan rollback plan
+
+## Perintah Penting
+```bash
+# Cek status update
+eas update:list
+
+# Rollback ke versi sebelumnya
+eas update:rollback
+
+# Konfigurasi ulang update
+eas update:configure
+
+# View update detail
+eas update:view [UPDATE_ID]
+```
+
+## Sumber Daya Tambahan
+- [Dokumentasi EAS Update](https://docs.expo.dev/eas-update/introduction/)
+- [Expo Forums](https://forums.expo.dev)
+- [GitHub Issues](https://github.com/expo/expo/issues)
