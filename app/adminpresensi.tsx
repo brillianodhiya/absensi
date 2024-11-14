@@ -59,7 +59,7 @@ const adminpresensi = () => {
     Alert.alert("Presensi masuk telah dibuka");
   };
   const activateCheckOut = async () => {
-    await AsyncStorage.setItem("presensiMasukActive", "true");
+    await AsyncStorage.setItem("presensiPulangActive", "true");
     Alert.alert("Presensi pulang telah dibuka");
   };
   useFocusEffect(
