@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "@/components/Header";
 import axios from "axios";
+const [searchQuery, setSearchQuery] = useState("");
 
 // Status colors based on type
 const statusColors = {
@@ -48,6 +49,10 @@ const RekapData = () => {
 
     fetchData(); // Memanggil fungsi `fetchData` ketika komponen pertama kali dimuat
   }, []);
+
+  const handleSearch = (text: string) => {
+    setSearchQuery(text);
+  };
 
   const renderItem = ({ item }: { item: AttendanceItem }) => (
     <View style={styles.itemContainer}>
@@ -101,6 +106,8 @@ const RekapData = () => {
             placeholder="Search"
             placeholderTextColor="white"
             style={styles.searchInput}
+            value={searchQuery} // Bind state ke input
+            onChangeText={handleSearch} // Panggil fungsi pencarian saat teks berubah
           />
           <Ionicons
             name="search"

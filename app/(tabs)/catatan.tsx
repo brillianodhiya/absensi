@@ -17,6 +17,7 @@ const catatan = () => {
   const [userData, setUserData] = useState({
     nama: "",
     kelas: "",
+    absen: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -36,7 +37,7 @@ const catatan = () => {
         return;
       }
       axios
-        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+        .get("https://px973nrz-3000.asse.devtunnels.ms/users/info_catatan", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -45,6 +46,7 @@ const catatan = () => {
           setUserData({
             nama: response.data.data.nama,
             kelas: response.data.data.kelas,
+            absen: response.data.data.absen.is_leave,
           });
           setLoading(false);
         })
@@ -120,7 +122,7 @@ const catatan = () => {
           <View style={styles.body}>
             <Text style={styles.infoText}>Status</Text>
             <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{"hadir/izin/sakit"}</Text>
+            <Text style={styles.isiText}>{userData.absen}</Text>
           </View>
         </View>
       </View>
