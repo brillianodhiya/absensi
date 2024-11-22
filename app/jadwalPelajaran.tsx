@@ -11,8 +11,11 @@ import Header from "@/components/Header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect } from "expo-router";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-// Definisikan tipe data yang sesuai dengan struktur data yang diterima
 interface Jadwal {
   kelas: string;
   jam: string;
@@ -29,7 +32,7 @@ interface HariData {
 const JadwalPelajaran = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<HariData[]>([]); // Tipe data disesuaikan dengan HariData[]
+  const [data, setData] = useState<HariData[]>([]);
 
   const getData = async () => {
     setLoading(true);
@@ -50,7 +53,7 @@ const JadwalPelajaran = () => {
         }
       )
       .then((response) => {
-        const data: HariData[] = response.data.data; // Tipe data disesuaikan
+        const data: HariData[] = response.data.data;
         console.log(data); // Debugging output
         setData(data);
         setLoading(false);
@@ -79,10 +82,7 @@ const JadwalPelajaran = () => {
         <ScrollView style={styles.body}>
           {data.map((item, index) => (
             <View key={index} style={styles.daySection}>
-              {/* Tampilkan Hari */}
               <Text style={styles.dayText}>{item.hari}</Text>
-
-              {/* Tampilkan Semua Jadwal untuk Hari Tersebut */}
               {item.jadwal.map((jadwal, jadwalIndex) => (
                 <View key={jadwalIndex} style={styles.jadwalItem}>
                   <View style={styles.row}>
@@ -123,53 +123,53 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#C8EDEE",
-    paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingHorizontal: wp("5%"),
+    paddingTop: hp("6%"),
   },
   body: {
     flex: 1,
   },
   daySection: {
-    marginBottom: 20,
+    marginBottom: hp("3%"),
   },
   dayText: {
-    fontSize: 22,
+    fontSize: wp("6%"),
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 10,
+    marginBottom: hp("2%"),
   },
   jadwalItem: {
     backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
+    padding: wp("4%"),
+    borderRadius: wp("2%"),
+    marginBottom: hp("1.5%"),
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 5,
+    marginBottom: hp("1%"),
   },
   infoText: {
-    fontSize: 16,
+    fontSize: wp("4.5%"),
     fontWeight: "bold",
-    width: 100,
+    width: wp("25%"),
     color: "black",
   },
   separator: {
-    fontSize: 16,
+    fontSize: wp("4.5%"),
     fontWeight: "bold",
-    marginHorizontal: 5,
+    marginHorizontal: wp("2%"),
     color: "black",
   },
   isiText: {
-    fontSize: 16,
+    fontSize: wp("4.5%"),
     flex: 1,
     color: "black",
   },
   errorText: {
-    fontSize: 18,
+    fontSize: wp("5%"),
     color: "red",
     textAlign: "center",
-    marginTop: 20,
+    marginTop: hp("5%"),
   },
 });

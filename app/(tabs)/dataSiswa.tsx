@@ -11,10 +11,14 @@ import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "@/components/Header";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const DataSiswa = () => {
   const [userData, setUserData] = useState({
-    role: "", // Menambahkan role untuk melacak peran pengguna
+    role: "",
     nisn: "",
     nip: "",
     nama: "",
@@ -40,7 +44,7 @@ const DataSiswa = () => {
       .then((response) => {
         const data = response.data.data;
         setUserData({
-          role: data.role, // Mendapatkan role dari response
+          role: data.role,
           nisn: data.nisn,
           nama: data.nama,
           kelas: data.kelas,
@@ -62,10 +66,9 @@ const DataSiswa = () => {
   );
 
   return (
-    <SafeAreaView style={styles.Container}>
+    <SafeAreaView style={styles.container}>
       <Header title="DATA SISWA" />
       <View style={styles.body}>
-        {/* Tampilkan NISN jika role adalah "siswa", dan NIP jika role adalah "guru" */}
         {userData.role === "siswa" ? (
           <View style={styles.row}>
             <Text style={styles.infoText}>NISN</Text>
@@ -92,10 +95,9 @@ const DataSiswa = () => {
       </View>
       <TouchableOpacity
         style={styles.presenceButton}
-        onPress={() => router.push("/presensiMasuk")}
+        onPress={() => router.push("/home")}
       >
-        <Ionicons name="create-outline" size={20} color="white" />
-        <Text style={styles.presenceButtonText}>PRESENSI</Text>
+        <Text style={styles.presenceButtonText}>Kembali</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -104,52 +106,51 @@ const DataSiswa = () => {
 export default DataSiswa;
 
 const styles = StyleSheet.create({
-  Container: {
+  container: {
     flex: 1,
     backgroundColor: "#C8EDEE",
   },
-
   body: {
-    marginTop: 30,
+    marginTop: hp("3%"),
+    paddingHorizontal: wp("5%"),
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 15,
-    marginLeft: 20,
+    marginBottom: hp("1.5%"),
   },
   infoText: {
-    fontSize: 18,
+    fontSize: hp("2.2%"),
     fontWeight: "bold",
-    width: 100,
+    width: wp("30%"),
     color: "black",
   },
   separator: {
-    fontSize: 18,
+    fontSize: hp("2.2%"),
     fontWeight: "bold",
-    marginHorizontal: 5,
+    marginHorizontal: wp("1%"),
     color: "black",
   },
   isiText: {
-    fontSize: 18,
+    fontSize: hp("2.2%"),
     flex: 1,
     color: "black",
   },
   presenceButton: {
     flexDirection: "row",
-    marginTop: 15,
+    marginTop: hp("3%"),
     alignItems: "center",
     backgroundColor: "#FFB22C",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    width: "85%",
-    marginHorizontal: "auto",
+    paddingVertical: hp("2%"),
+    paddingHorizontal: wp("6%"),
+    borderRadius: wp("2%"),
+    width: wp("85%"),
+    alignSelf: "center",
   },
   presenceButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
-    marginLeft: 8,
+    fontSize: hp("2.5%"),
+    marginLeft: wp("2%"),
   },
 });

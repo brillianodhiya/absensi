@@ -3,8 +3,12 @@ import React, { useState } from "react";
 import { useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-const dataKelas = () => {
+const DataKelas = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
@@ -42,8 +46,9 @@ const dataKelas = () => {
       getData();
     }, [])
   );
+
   return (
-    <SafeAreaView style={styles.Container}>
+    <SafeAreaView style={styles.container}>
       {/* Header dengan logo dan judul */}
       <View style={styles.header}>
         <Image
@@ -52,74 +57,67 @@ const dataKelas = () => {
         />
         <Text style={styles.textHeader}>DATA KELAS</Text>
       </View>
-      <View style={styles.ContainerList}>
-        <View style={styles.ListItem}>
+      <View style={styles.containerList}>
+        <View style={styles.listItem}>
           <Text style={styles.textHeader}>Kode Kelas</Text>
           <Text style={styles.textHeader}>Wali Kelas</Text>
         </View>
         {loading ? (
-          <View style={styles.ListItem}>
-            <Text style={styles.ListText}>Loading...</Text>
-            <Text style={styles.ListText}>Loading...</Text>
+          <View style={styles.listItem}>
+            <Text style={styles.listText}>Loading...</Text>
+            <Text style={styles.listText}>Loading...</Text>
           </View>
         ) : (
-          data.map((item, index) => {
-            return (
-              <View key={index} style={styles.ListItem}>
-                <Text style={styles.ListText}>{item.nama_kelas}</Text>
-                <Text style={styles.ListText}>{item.wali.nama}</Text>
-              </View>
-            );
-          })
+          data.map((item, index) => (
+            <View key={index} style={styles.listItem}>
+              <Text style={styles.listText}>{item.nama_kelas}</Text>
+              <Text style={styles.listText}>{item.wali.nama}</Text>
+            </View>
+          ))
         )}
       </View>
     </SafeAreaView>
   );
 };
 
-export default dataKelas;
+export default DataKelas;
 
 const styles = StyleSheet.create({
-  ContainerList: {
-    display: "flex",
-    flexDirection: "column",
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  ListItem: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  ListText: {
-    fontSize: 18,
-    color: "blue",
-    fontWeight: "normal",
-    justifyContent: "center",
-    marginBottom: 4,
-  },
-  Container: {
+  container: {
     flex: 1,
-    backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
+    backgroundColor: "#C8EDEE",
   },
   header: {
     flexDirection: "row",
+    marginTop: hp("5%"),
+    alignItems: "center",
+    marginHorizontal: wp("5%"),
   },
   textHeader: {
-    fontSize: 20,
+    fontSize: wp("6%"),
     color: "black",
     fontWeight: "bold",
-    justifyContent: "center",
-    marginTop: 5,
+    marginLeft: wp("5%"),
   },
   logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-    marginRight: 60,
-    marginLeft: 20,
+    width: wp("12%"),
+    height: wp("12%"),
   },
-  listContainer: {
-    padding: 10,
+  containerList: {
+    flex: 1,
+    paddingHorizontal: wp("5%"),
+    paddingTop: hp("3%"),
+  },
+  listItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: hp("1.5%"),
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  listText: {
+    fontSize: wp("4.5%"),
+    color: "blue",
+    fontWeight: "normal",
   },
 });

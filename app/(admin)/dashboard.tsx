@@ -1,11 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import { router, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Header from "@/components/Header";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
 const dashboardUser = () => {
   const [userData, setUserData] = useState({
     nama: "",
@@ -18,7 +22,6 @@ const dashboardUser = () => {
       console.log("Get data");
       const token = await AsyncStorage.getItem("token");
 
-      console.log(token);
       if (!token) {
         setError("Token not found. Please login.");
         setLoading(false);
@@ -45,6 +48,7 @@ const dashboardUser = () => {
       console.log(error);
     }
   };
+
   const Logout = async () => {
     try {
       await AsyncStorage.removeItem("token");
@@ -53,11 +57,13 @@ const dashboardUser = () => {
       console.error(error);
     }
   };
+
   useFocusEffect(
     React.useCallback(() => {
       getData();
     }, [])
   );
+
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="DASHBOARD" />
@@ -97,7 +103,6 @@ const dashboardUser = () => {
           <Text style={styles.buttonText}>👨‍💼 Admin Presensi</Text>
         </TouchableOpacity>
 
-        {/* Tombol Rekap Pulang */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.push("/rekapabsen")}
@@ -106,7 +111,7 @@ const dashboardUser = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button} onPress={Logout}>
-          <Text style={styles.buttonText}> Loguot</Text>
+          <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -120,47 +125,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
-  header: {
-    flexDirection: "row",
-  },
-  textHeader: {
-    fontSize: 20,
-    color: "black",
-    fontWeight: "bold",
-    justifyContent: "center",
-    marginTop: 5,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-    marginRight: 60,
-    marginLeft: 20,
-  },
   body: {
-    marginTop: 10,
-    marginLeft: 50,
+    marginTop: hp("2%"), // Use heightPercentageToDP for spacing
+    marginLeft: wp("10%"), // Use widthPercentageToDP for responsive left margin
+    marginRight: wp("10%"), // Use widthPercentageToDP for responsive right margin
+  },
+  welcomeText: {
+    fontSize: hp("2.5%"), // Adjust font size based on screen height
+    color: "#000",
   },
   username: {
     gap: 8,
-    marginBottom: 8,
-    fontSize: 25,
+    marginBottom: hp("1%"), // Use heightPercentageToDP for vertical spacing
+    fontSize: hp("3%"), // Adjust font size for username
     fontWeight: "bold",
-  },
-  welcomeText: {
-    fontSize: 18,
-    color: "#000",
   },
   button: {
     backgroundColor: "#fbb03b", // Warna kuning pada tombol
-    width: "85%",
-    padding: 20,
-    borderRadius: 10,
+    width: wp("85%"), // Responsive width using wp
+    paddingVertical: hp("2%"), // Padding based on screen height
+    borderRadius: wp("3%"), // Border radius adjusted based on width
     alignItems: "center",
-    marginVertical: 8,
+    marginVertical: hp("1.5%"), // Margin for vertical spacing between buttons
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: hp("2%"), // Responsive font size for button text
     color: "#fff",
   },
 });

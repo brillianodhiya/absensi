@@ -1,4 +1,5 @@
 import {
+  Alert,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -6,49 +7,74 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "@/components/Header";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const catatan = () => {
   const [userData, setUserData] = useState({
     nama: "",
     kelas: "",
-    absen: "",
+    status: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [IsModalOpen, setIsModalOpen] = useState(false);
   const [isi_catatan, setCatatan] = useState("");
+  const [presensiPulangActive, setPresensiPulangActive] = useState(false);
+  const checkPresensiStatus = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        Alert.alert("Error", "Token tidak ditemukan. Silakan login.");
+        return;
+      }
+
+      const response = await axios.get(
+        "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/check-status",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const allowClokout = response.data?.allowClockout; // Periksa nilai allow_clokin
+      setPresensiPulangActive(allowClokout); // Set status tombol berdasarkan allow_clokin
+    } catch (error) {
+      console.error("Error checking presensi status:", error);
+      Alert.alert("Error", "Gagal memeriksa status presensi.");
+    }
+  };
 
   const getData = async () => {
     try {
-      console.log("Get data");
       const token = await AsyncStorage.getItem("token");
-      console.log();
-
-      console.log(token);
       if (!token) {
         setError("Token not found. Please login.");
         setLoading(false);
         return;
       }
+
+      // Ambil data user dan status presensi pulang dari server
       axios
-        .get("https://px973nrz-3000.asse.devtunnels.ms/users/info_catatan", {
+        .get("https://px973nrz-3000.asse.devtunnels.ms/catatan/info_catatan", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
-        .then((response) => {
+        .then(async (response) => {
           setUserData({
             nama: response.data.data.nama,
             kelas: response.data.data.kelas,
-            absen: response.data.data.absen.is_leave,
+            status: response.data.data.status,
           });
-          setLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -57,8 +83,11 @@ const catatan = () => {
         });
     } catch (error) {
       console.log(error);
+      setError("An unexpected error occurred.");
+      setLoading(false);
     }
   };
+
   const handleCtn = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -87,7 +116,6 @@ const catatan = () => {
           setLoading(false);
         })
         .catch((error) => {
-          console.log(token);
           console.error("Error adding note:", error);
           setError("Failed to add note.");
           setLoading(false);
@@ -102,8 +130,10 @@ const catatan = () => {
   useFocusEffect(
     React.useCallback(() => {
       getData();
+      checkPresensiStatus();
     }, [])
   );
+
   return (
     <SafeAreaView style={styles.Container}>
       <Header title="CATATAN" />
@@ -122,7 +152,7 @@ const catatan = () => {
           <View style={styles.body}>
             <Text style={styles.infoText}>Status</Text>
             <Text style={styles.separator}>:</Text>
-            <Text style={styles.isiText}>{userData.absen}</Text>
+            <Text style={styles.isiText}>{userData.status}</Text>
           </View>
         </View>
       </View>
@@ -140,9 +170,15 @@ const catatan = () => {
           Kirim
         </Text>
       </TouchableOpacity>
+
+      {/* Tombol Presensi Pulang hanya bisa ditekan jika presensi sudah diaktifkan */}
       <TouchableOpacity
-        style={styles.presenceButton}
+        style={[
+          styles.presenceButton,
+          !presensiPulangActive && { opacity: 0.5 },
+        ]} // Nonaktifkan tampilan jika belum aktif
         onPress={() => router.push("/presensiPulang")}
+        disabled={!presensiPulangActive} // Menonaktifkan tombol jika presensiPulangActive belum aktif
       >
         <Ionicons name="create-outline" size={20} color="white" />
         <Text style={styles.presenceButtonText}>PRESENSI PULANG</Text>
@@ -159,95 +195,95 @@ const styles = StyleSheet.create({
     backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
   },
   header: {
-    marginTop: 15,
+    marginTop: hp("2%"),
     alignItems: "center",
   },
   textHeader: {
-    fontSize: 28,
+    fontSize: hp("3.5%"),
     color: "black",
     fontWeight: "bold",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 45,
+    marginTop: hp("4%"),
   },
   infoContainer: {
-    marginHorizontal: 25,
-    marginBottom: 30,
-    marginTop: 25,
+    marginHorizontal: wp("6%"),
+    marginBottom: hp("3%"),
+    marginTop: hp("3%"),
   },
   row: {
-    marginTop: 20,
+    marginTop: hp("2%"),
   },
   body: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: hp("2%"),
   },
   infoText: {
-    fontSize: 20,
+    fontSize: hp("2.5%"),
     fontWeight: "bold",
-    width: 80,
+    width: wp("25%"),
     color: "black",
   },
   separator: {
-    fontSize: 20,
+    fontSize: hp("2.5%"),
     fontWeight: "bold",
     color: "black",
-    marginRight: 5,
+    marginRight: wp("2%"),
   },
   isiText: {
-    fontSize: 20,
+    fontSize: hp("2.5%"),
     color: "black",
   },
   presenceButtonKirim: {
-    marginTop: 15,
+    marginTop: hp("3%"),
     alignItems: "center",
     backgroundColor: "#fbb03b",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    width: "25%", // Sesuaikan lebar agar lebih proporsional di kanan
-    alignSelf: "flex-end", // Pindahkan tombol ke kanan
-    marginRight: 25,
+    paddingVertical: hp("1.5%"),
+    paddingHorizontal: wp("5%"),
+    borderRadius: wp("2%"),
+    width: wp("30%"),
+    alignSelf: "flex-end",
+    marginRight: wp("6%"),
   },
   presenceButton: {
     flexDirection: "row",
-    marginTop: 35,
+    marginTop: hp("4%"),
     alignItems: "center",
     backgroundColor: "#40E9AE",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    width: "85%",
-    marginHorizontal: "auto",
+    paddingVertical: hp("1.5%"),
+    paddingHorizontal: wp("5%"),
+    borderRadius: wp("2%"),
+    width: wp("85%"),
+    marginHorizontal: wp("7.5%"),
   },
   presenceButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
-    marginLeft: 8,
+    fontSize: hp("2%"),
+    marginLeft: wp("2%"),
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: hp("3%"),
   },
   label: {
-    fontSize: 16,
+    fontSize: hp("2%"),
     color: "black",
-    marginBottom: 10,
-    marginLeft: 25,
+    marginBottom: hp("1%"),
+    marginLeft: wp("6%"),
   },
   input: {
-    marginHorizontal: "auto",
-    height: 70,
-    width: 370,
+    marginHorizontal: wp("7.5%"),
+    height: hp("8%"),
+    width: wp("85%"),
     backgroundColor: "white",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
+    borderRadius: wp("2%"),
+    paddingHorizontal: wp("4%"),
+    fontSize: hp("2%"),
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
-    elevation: 5, // Untuk efek bayangan di Android
+    elevation: 5,
   },
 });

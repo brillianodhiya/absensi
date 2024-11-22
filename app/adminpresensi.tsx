@@ -1,19 +1,22 @@
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
-  Image,
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
 import Header from "@/components/Header";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-const adminpresensi = () => {
+const AdminPresensi = () => {
   const [userData, setUserData] = useState({
     nama: "",
     role: "",
@@ -21,113 +24,201 @@ const adminpresensi = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [attendanceStatus, setAttendanceStatus] = useState({
+    allowClockin: false,
+    allowClockout: false,
+  });
+
   const getData = async () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
 
-      console.log(token);
       if (!token) {
-        setError("Token not found. Please login.");
+        setError("Token tidak ditemukan. Silakan login.");
         setLoading(false);
         return;
       }
-      axios
-        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+
+      // Ambil data profil user
+      const userResponse = await axios.get(
+        "https://px973nrz-3000.asse.devtunnels.ms/users/show_profile",
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-        .then((response) => {
-          setUserData({
-            nama: response.data.data.nama,
-            role: response.data.data.role,
-          });
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          setError("Failed to fetch user data.");
-          setLoading(false);
-        });
+        }
+      );
+
+      setUserData({
+        nama: userResponse.data.data.nama,
+        role: userResponse.data.data.role,
+      });
+
+      // Ambil status absensi untuk kelas
+      const statusResponse = await axios.get(
+        "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/check-status", // Endpoint untuk cek status absensi
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setAttendanceStatus({
+        allowClockin: statusResponse.data.allowClockin,
+        allowClockout: statusResponse.data.allowClockout,
+      });
+
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setError("Gagal mengambil data.");
+      setLoading(false);
     }
   };
   const activateCheckIn = async () => {
-    await AsyncStorage.setItem("presensiMasukActive", "true");
-    Alert.alert("Presensi masuk telah dibuka");
+    try {
+      console.log("triggered");
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        setError("Token tidak ditemukan. Silakan login.");
+        return;
+      }
+
+      const response = await axios.post(
+        "https://px973nrz-3000.asse.devtunnels.ms/flag_alowed/clokin_open",
+        {
+          allow_clockin: true, // Body request
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.status);
+      if (response.status === 201) {
+        Alert.alert("Presensi masuk telah dibuka");
+        getData(); // Refresh data setelah perubahan
+      } else {
+        Alert.alert("Error", "Gagal mengaktifkan presensi masuk.");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Gagal mengaktifkan presensi masuk:", error.message);
+        Alert.alert("Error", error.message);
+      } else {
+        console.error("Error yang tidak dikenal:", error);
+        Alert.alert("Error", "Terjadi kesalahan yang tidak diketahui.");
+      }
+    }
   };
+
   const activateCheckOut = async () => {
-    await AsyncStorage.setItem("presensiPulangActive", "true");
-    Alert.alert("Presensi pulang telah dibuka");
+    try {
+      // console.log("triggered");
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        setError("Token tidak ditemukan. Silakan login.");
+        return;
+      }
+
+      const response = await axios.post(
+        "https://px973nrz-3000.asse.devtunnels.ms/flag_alowed/update_close",
+        {
+          allowClockout: true, // Body request
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.status);
+      if (response.status === 200) {
+        Alert.alert("Presensi pulang telah dibuka");
+        getData(); // Refresh data setelah perubahan
+      } else {
+        Alert.alert("Error", "Gagal mengaktifkan presensi pulang.");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Gagal mengaktifkan presensi pulang:", error.message);
+        Alert.alert("Error", error.message);
+      } else {
+        console.error("Error yang tidak dikenal:", error);
+        Alert.alert("Error", "Terjadi kesalahan yang tidak diketahui.");
+      }
+    }
   };
+
   useFocusEffect(
     React.useCallback(() => {
       getData();
     }, [])
   );
+
   return (
-    <SafeAreaView style={styles.Container}>
+    <SafeAreaView style={styles.container}>
       <Header title="ADMIN PRESENSI" />
-      <View style={styles.ListText}>
-        <Text style={styles.ListText}>Nama : {userData.nama}</Text>
-        <Text style={styles.ListText}>Status : {userData.role}</Text>
+      <View style={styles.listTextContainer}>
+        <Text style={styles.listText}>Nama : {userData.nama}</Text>
+        <Text style={styles.listText}>Status : {userData.role}</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={activateCheckIn}>
+
+      <TouchableOpacity
+        style={[
+          styles.button,
+          attendanceStatus.allowClockin && { backgroundColor: "#ccc" },
+        ]}
+        onPress={activateCheckIn}
+        disabled={attendanceStatus.allowClockin} // Nonaktifkan jika clockin sudah aktif
+      >
         <Text style={styles.buttonText}>🏠 Aktifkan Absen Masuk</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={activateCheckOut}>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={activateCheckOut}
+        disabled={attendanceStatus.allowClockout} // Nonaktifkan jika clockout sudah diizinkan
+      >
         <Text style={styles.buttonText}>🏠 Aktifkan Absen Pulang</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
-export default adminpresensi;
+export default AdminPresensi;
 
 const styles = StyleSheet.create({
-  ContainerList: {
-    display: "flex",
-    flexDirection: "column",
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  ListItem: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  ListText: {
-    fontSize: 18,
-    color: "black",
-    fontWeight: "normal",
-    justifyContent: "center",
-    marginBottom: 4,
-    paddingLeft: 20,
-  },
-  Container: {
+  container: {
     flex: 1,
-    backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
+    backgroundColor: "#C8EDEE",
   },
-  listContainer: {
-    padding: 10,
+  listTextContainer: {
+    paddingHorizontal: wp("5%"),
+    marginBottom: hp("2%"),
+  },
+  listText: {
+    fontSize: hp("2.2%"),
+    color: "black",
+    marginBottom: hp("1%"),
   },
   button: {
-    backgroundColor: "#fbb03b", // Warna kuning pada tombol
-    width: 300,
-    height: 80,
-    padding: 20,
-    borderRadius: 15,
+    backgroundColor: "#fbb03b",
+    width: wp("80%"),
+    height: hp("8%"),
+    justifyContent: "center",
     alignItems: "center",
-    marginVertical: 8,
-    marginBottom: 10,
-    marginRight: 60,
-    marginLeft: 30,
+    borderRadius: wp("4%"),
+    alignSelf: "center",
+    marginVertical: hp("1.5%"),
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: hp("2.5%"),
     color: "#fff",
-    alignItems: "center",
   },
 });
