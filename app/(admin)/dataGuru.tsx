@@ -10,15 +10,19 @@ import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "@/components/Header";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-const DataSiswa = () => {
+const DataGuru = () => {
   const [userData, setUserData] = useState({
     role: "", // Menambahkan role untuk melacak peran pengguna
     nisn: "",
     nip: "",
     nama: "",
     kelas: "",
-    mapel: "", //tambahan mapel
+    mapel: "", // tambahan mapel
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -46,7 +50,7 @@ const DataSiswa = () => {
           nama: data.nama,
           kelas: data.kelas,
           nip: data.nip,
-          mapel: data.mapel, //tambahan mapel
+          mapel: data.mapel, // tambahan mapel
         });
         setLoading(false);
       })
@@ -97,7 +101,6 @@ const DataSiswa = () => {
           <Text style={styles.isiText}>
             {loading ? "Loading..." : userData.mapel}
           </Text>
-          {/* //mengubah dr kelas mjd  mapel */}
         </View>
       </View>
       <TouchableOpacity
@@ -110,7 +113,7 @@ const DataSiswa = () => {
   );
 };
 
-export default DataSiswa;
+export default DataGuru;
 
 const styles = StyleSheet.create({
   Container: {
@@ -119,46 +122,46 @@ const styles = StyleSheet.create({
   },
 
   body: {
-    marginTop: 30,
+    marginTop: hp("3%"),
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 15,
-    marginLeft: 20,
+    marginBottom: hp("2%"),
+    marginLeft: wp("5%"),
   },
   infoText: {
-    fontSize: 18,
+    fontSize: hp("2.5%"),
     fontWeight: "bold",
-    width: 100,
+    width: wp("30%"),
     color: "black",
   },
   separator: {
-    fontSize: 18,
+    fontSize: hp("2.5%"),
     fontWeight: "bold",
-    marginHorizontal: 5,
+    marginHorizontal: wp("2%"),
     color: "black",
   },
   isiText: {
-    fontSize: 18,
+    fontSize: hp("2.5%"),
     flex: 1,
     color: "black",
   },
   presenceButton: {
     flexDirection: "row",
-    marginTop: 15,
+    marginTop: hp("4%"),
     alignItems: "center",
     backgroundColor: "#FFB22C",
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    width: "25%",
-    marginHorizontal: "auto",
+    paddingVertical: hp("1.5%"),
+    paddingHorizontal: wp("5%"),
+    borderRadius: wp("2%"),
+    width: wp("30%"),
+    marginHorizontal: wp("35%"),
   },
   presenceButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
-    marginLeft: 8,
+    fontSize: hp("2%"),
+    marginLeft: wp("2%"),
   },
 });

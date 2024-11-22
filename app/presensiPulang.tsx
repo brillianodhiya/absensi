@@ -5,6 +5,8 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Dimensions,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
@@ -12,6 +14,8 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location"; // Import expo-location
 import Header from "@/components/Header";
+
+const { width, height } = Dimensions.get("window");
 
 const PresensiPulang = () => {
   const [userData, setUserData] = useState({
@@ -185,16 +189,16 @@ const styles = StyleSheet.create({
   },
   welcome: {
     marginTop: 25,
-    marginLeft: 25,
+    marginLeft: width * 0.06, // Dynamic margin for smaller screens
   },
   welcomeText: {
-    gap: 8,
-    marginBottom: 8,
     fontSize: 36,
     fontWeight: "bold",
+    marginBottom: 8,
+    marginLeft: width * 0.06,
   },
   infoContainer: {
-    marginHorizontal: 25,
+    marginHorizontal: width * 0.06,
     marginBottom: 30,
   },
   row: {
@@ -208,7 +212,7 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 20,
     fontWeight: "bold",
-    width: 80,
+    width: width * 0.25, // Adjust width proportionally
     color: "black",
   },
   separator: {
@@ -234,7 +238,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 5,
-    width: "30%",
+    width: width * 0.3, // Use percentage for responsive width
     marginHorizontal: "auto",
   },
   statusButton: {
@@ -260,7 +264,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 5,
-    width: "85%",
+    width: width * 0.85, // Adjust for responsive width
     alignSelf: "center",
   },
   presenceButtonText: {

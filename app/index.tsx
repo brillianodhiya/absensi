@@ -13,6 +13,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import { useUserRole } from "@/hooks/useUserRole";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const Index = () => {
   const [nama, setName] = useState("");
@@ -83,7 +87,7 @@ const Index = () => {
       />
 
       <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
-        <Ionicons name="arrow-forward" size={20} color="white" />
+        <Ionicons name="arrow-forward" size={wp("5%")} color="white" />
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -97,36 +101,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#C8EDEE",
     alignItems: "center",
-    padding: 20,
+    padding: wp("5%"),
   },
   logo: {
-    width: 120,
-    height: 120,
-    marginTop: 50,
-    marginBottom: 20,
+    width: wp("30%"),
+    height: wp("30%"),
+    marginTop: hp("5%"),
+    marginBottom: hp("3%"),
     resizeMode: "contain",
   },
   title: {
-    fontSize: 28,
+    fontSize: wp("7%"),
     fontWeight: "bold",
     color: "black",
-    marginBottom: 30,
+    marginBottom: hp("3%"),
   },
   label: {
-    fontSize: 16,
+    fontSize: wp("4%"),
     color: "black",
     alignSelf: "flex-start",
-    marginLeft: 10,
-    marginBottom: 5,
+    marginLeft: wp("2%"),
+    marginBottom: hp("1%"),
   },
   input: {
     width: "100%",
-    height: 50,
+    height: hp("6%"),
     backgroundColor: "white",
-    borderRadius: 5,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 20,
+    borderRadius: wp("1%"),
+    paddingHorizontal: wp("4%"),
+    fontSize: wp("4%"),
+    marginBottom: hp("2%"),
     borderBottomWidth: 1,
     borderBottomColor: "#B0BEC5",
   },
@@ -135,15 +139,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFA000",
-    borderRadius: 5,
+    borderRadius: wp("2%"),
     width: "100%",
-    height: 50,
-    marginTop: 20,
+    height: hp("6%"),
+    marginTop: hp("3%"),
   },
   loginButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 18,
-    marginLeft: 10,
+    fontSize: wp("4.5%"),
+    marginLeft: wp("2%"),
   },
 });

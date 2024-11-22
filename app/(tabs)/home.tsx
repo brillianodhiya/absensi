@@ -6,82 +6,101 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import Header from "@/components/Header";
-const Home = () => {
-  const checkPresensiStatus = async () => {
-    const presensiMasukActive = await AsyncStorage.getItem(
-      "presensiMasukActive"
-    );
-    const presensiPulangActive = await AsyncStorage.getItem(
-      "presensiPulangActive"
-    );
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-    if (presensiMasukActive === "true") {
-      Alert.alert("Presensi masuk telah dibuka");
-      await AsyncStorage.removeItem("presensiMasukActive");
-    }
-    if (presensiPulangActive === "true") {
-      Alert.alert("Presensi pulang telah dibuka");
-      await AsyncStorage.removeItem("presensiPulangActive");
+const Home = () => {
+  const [presensiMasukActive, setPresensiMasukActive] = useState(false); // Status tombol
+  const [userData, setUserData] = useState({ nama: "" }); // Data pengguna
+  const [error, setError] = useState(""); // Status error
+  const [loading, setLoading] = useState(true); // Status loading
+
+  // Fungsi untuk memeriksa status `allow_clokin` dari API
+  const checkPresensiStatus = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        Alert.alert("Error", "Token tidak ditemukan. Silakan login.");
+        return;
+      }
+
+      const response = await axios.get(
+        "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/check-status",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const allowClokin = response.data?.allowClockin; // Periksa nilai allow_clokin
+      setPresensiMasukActive(allowClokin); // Set status tombol berdasarkan allow_clokin
+    } catch (error) {
+      console.error("Error checking presensi status:", error);
+      Alert.alert("Error", "Gagal memeriksa status presensi.");
     }
   };
 
-  const [userData, setUserData] = useState({
-    nama: "",
-  });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-
+  // Fungsi untuk mendapatkan data pengguna
   const getData = async () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
 
-      console.log(token);
       if (!token) {
         setError("Token not found. Please login.");
         setLoading(false);
         return;
       }
-      axios
-        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+
+      const response = await axios.get(
+        "https://px973nrz-3000.asse.devtunnels.ms/users/show_profile",
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-        .then((response) => {
-          setUserData({
-            nama: response.data.data.nama,
-          });
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          setError("Failed to fetch user data.");
-          setLoading(false);
+        }
+      );
+
+      if (response.data?.data) {
+        setUserData({
+          nama: response.data.data.nama,
         });
+      } else {
+        throw new Error("Data pengguna tidak valid.");
+      }
+
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching user data:", error);
+      setError("Failed to fetch user data.");
+      setLoading(false);
     }
   };
 
+  // Fungsi logout
   const Logout = async () => {
     try {
       await AsyncStorage.removeItem("token");
-      console.log();
-      router.push("/");
+      router.push("/"); // Redirect ke halaman login
     } catch (error) {
       console.error("Error saat menghapus token:", error);
+      Alert.alert("Error", "Gagal logout.");
     }
   };
 
+  // Menggunakan `useFocusEffect` untuk memuat data setiap kali layar difokuskan
   useFocusEffect(
     React.useCallback(() => {
       getData();
-      checkPresensiStatus();
+      checkPresensiStatus(); // Periksa status presensi
     }, [])
   );
+
   return (
-    <SafeAreaView style={styles.Container}>
+    <SafeAreaView style={styles.container}>
       <Header title="DASHBOARD" />
       <View style={styles.body}>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
@@ -92,25 +111,27 @@ const Home = () => {
           style={styles.button}
           onPress={() => router.push("/dataSiswa")}
         >
-          <Text style={styles.buttonText}> Data Siswa</Text>
+          <Text style={styles.buttonText}>Data Siswa</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.push("/jadwalPelajaran")}
         >
-          <Text style={styles.buttonText}> Jadwal Pelajaran</Text>
+          <Text style={styles.buttonText}>Jadwal Pelajaran</Text>
         </TouchableOpacity>
 
+        {/* Tombol Presensi Masuk hanya aktif jika `allow_clokin` = true */}
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, !presensiMasukActive && { opacity: 0.5 }]} // Nonaktifkan tampilan jika belum aktif
           onPress={() => router.push("/presensiMasuk")}
+          disabled={!presensiMasukActive} // Menonaktifkan tombol jika presensiMasukActive belum aktif
         >
-          <Text style={styles.buttonText}> Presensi Masuk</Text>
+          <Text style={styles.buttonText}>Presensi Masuk</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button} onPress={Logout}>
-          <Text style={styles.buttonText}> Logout</Text>
+          <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -120,41 +141,39 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-  Container: {
-    marginTop: -33,
+  container: {
     flex: 1,
-    backgroundColor: "#C8EDEE", // Warna latar belakang seluruh layar
+    backgroundColor: "#C8EDEE",
   },
-
   body: {
-    marginLeft: 25,
+    marginLeft: wp("5%"),
+    marginTop: hp("3%"),
   },
   username: {
-    gap: 8,
-    marginBottom: 8,
-    fontSize: 32,
+    marginTop: hp("1%"),
+    fontSize: hp("4%"),
     fontWeight: "bold",
   },
   welcomeText: {
-    fontSize: 22,
+    fontSize: hp("2.5%"),
     color: "#000",
   },
   buttonBody: {
-    marginTop: 10,
+    marginTop: hp("5%"),
     alignItems: "center",
     justifyContent: "center",
-    width: "100%", // Lebar penuh agar bisa memusatkan tombol
+    width: wp("100%"),
   },
   button: {
-    backgroundColor: "#fbb03b", // Warna kuning pada tombol
-    width: "85%",
-    padding: 25,
-    borderRadius: 10,
+    backgroundColor: "#fbb03b",
+    width: wp("85%"),
+    paddingVertical: hp("2%"),
+    borderRadius: wp("2%"),
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: hp("2%"),
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: hp("2.2%"),
     color: "#fff",
   },
 });

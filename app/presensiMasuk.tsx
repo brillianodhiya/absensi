@@ -8,11 +8,14 @@ import {
   Alert,
 } from "react-native";
 import * as Location from "expo-location";
-import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "@/components/Header";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const PresensiMasuk = () => {
   const [userData, setUserData] = useState({
@@ -21,13 +24,11 @@ const PresensiMasuk = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStatusButtonPressed, setIsStatusButtonPressed] = useState(null);
   const [is_leave, setIs_leave] = useState<0 | 1 | 2 | 3 | null>(null);
 
   const getData = async () => {
     try {
-      console.log("Get data");
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         setError("Token not found. Please login.");
@@ -82,7 +83,7 @@ const PresensiMasuk = () => {
       const leaveStatus = is_leave !== null ? is_leave : 0;
       axios
         .post(
-          "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/clockin",
+          "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/",
           {
             is_leave: leaveStatus,
             latitude,
@@ -125,7 +126,7 @@ const PresensiMasuk = () => {
   };
 
   return (
-    <SafeAreaView style={styles.Container}>
+    <SafeAreaView style={styles.container}>
       <Header title="PRESENSI" />
 
       <View style={styles.welcome}>
@@ -176,7 +177,7 @@ const PresensiMasuk = () => {
           <Text style={styles.statusButtonText}>S</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.backButton} onPress={() => masuk()}>
+      <TouchableOpacity style={styles.presenceButton} onPress={() => masuk()}>
         <Text style={styles.presenceButtonText}>Continue</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -185,115 +186,80 @@ const PresensiMasuk = () => {
 
 export default PresensiMasuk;
 
-// Rest of the style definitions...
-
 const styles = StyleSheet.create({
-  Container: {
+  container: {
     flex: 1,
     backgroundColor: "#C8EDEE",
   },
-  header: {
-    flexDirection: "row",
-    marginTop: 15,
-  },
-  textHeader: {
-    fontSize: 28,
-    color: "black",
-    fontWeight: "bold",
-    justifyContent: "center",
-    marginTop: 10,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 20,
-    marginRight: 80,
-    marginLeft: 20,
-  },
   welcome: {
-    marginTop: 25,
-    marginLeft: 25,
+    marginTop: hp("3%"),
+    marginLeft: wp("5%"),
   },
   welcomeText: {
-    gap: 8,
-    marginBottom: 8,
-    fontSize: 36,
+    fontSize: wp("8%"),
     fontWeight: "bold",
   },
   infoContainer: {
-    marginHorizontal: 25,
-    marginBottom: 30,
+    marginHorizontal: wp("5%"),
+    marginBottom: hp("3%"),
   },
   row: {
-    marginTop: 20,
+    marginTop: hp("2%"),
   },
   body: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: hp("1.5%"),
   },
   infoText: {
-    fontSize: 20,
+    fontSize: wp("5%"),
     fontWeight: "bold",
-    width: 80,
-    color: "black",
+    width: wp("30%"),
   },
   separator: {
-    fontSize: 20,
+    fontSize: wp("5%"),
     fontWeight: "bold",
     color: "black",
-    marginRight: 5,
+    marginRight: wp("2%"),
   },
   isiText: {
-    fontSize: 20,
+    fontSize: wp("5%"),
     color: "black",
   },
   statusContainer: {
-    marginTop: 30,
+    marginTop: hp("5%"),
     flexDirection: "row",
-    marginBottom: 20,
     justifyContent: "center",
-  },
-  backButton: {
-    marginTop: 15,
-    alignItems: "center",
-    backgroundColor: "#FFB22C",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    width: "30%",
-    marginHorizontal: "auto",
+    marginBottom: hp("4%"),
   },
   statusButton: {
     backgroundColor: "#000",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginHorizontal: 5,
+    paddingVertical: hp("2%"),
+    paddingHorizontal: wp("5%"),
+    borderRadius: wp("2%"),
+    marginHorizontal: wp("2%"),
   },
   statusButtonActive: {
-    backgroundColor: "green", // Warna tombol berubah menjadi hijau saat diklik
+    backgroundColor: "green", // Change to green when active
   },
   statusButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: wp("5%"),
   },
   presenceButton: {
-    flexDirection: "row",
-    marginTop: 15,
+    marginTop: hp("3%"),
     alignItems: "center",
     backgroundColor: "#40E9AE",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    width: "85%",
+    paddingVertical: hp("2%"),
+    paddingHorizontal: wp("6%"),
+    borderRadius: wp("2%"),
+    width: wp("80%"),
     alignSelf: "center",
   },
   presenceButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
-    marginLeft: 8,
+    fontSize: wp("5%"),
   },
 });

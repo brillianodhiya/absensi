@@ -4,6 +4,10 @@ import Header from "@/components/Header";
 import axios from "axios";
 import { useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 type UserProfile = {
   nama: string;
@@ -92,19 +96,19 @@ const styles = StyleSheet.create({
   },
   containerList: {
     backgroundColor: "#f8f8f8",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: wp("5%"),
+    paddingVertical: hp("2%"),
   },
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 10,
+    paddingVertical: hp("1.5%"),
     borderBottomWidth: 2,
     borderBottomColor: "#ddd",
-    marginBottom: 10,
+    marginBottom: hp("1%"),
   },
   textHeader: {
-    fontSize: 20,
+    fontSize: wp("4.5%"),
     color: "black",
     fontWeight: "bold",
     textAlign: "center",
@@ -114,18 +118,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "#FFFFFF",
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    marginBottom: 8,
+    paddingVertical: hp("2%"),
+    paddingHorizontal: wp("3%"),
+    borderRadius: wp("2%"),
+    marginBottom: hp("1%"),
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowRadius: wp("0.5%"),
     elevation: 1,
   },
   listText: {
-    fontSize: 18,
+    fontSize: wp("4%"),
     color: "#333",
     textAlign: "center",
     flex: 1,
