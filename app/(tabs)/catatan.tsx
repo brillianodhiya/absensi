@@ -64,7 +64,7 @@ const catatan = () => {
 
       // Ambil data user dan status presensi pulang dari server
       axios
-        .get("https://px973nrz-3000.asse.devtunnels.ms/catatan/info_catatan", {
+        .get("https://d09jsw8q-3000.asse.devtunnels.ms/catatan/info_catatan", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -100,7 +100,7 @@ const catatan = () => {
 
       axios
         .post(
-          "https://px973nrz-3000.asse.devtunnels.ms/catatan/make_catatan",
+          "https://d09jsw8q-3000.asse.devtunnels.ms/catatan/make_catatan",
           {
             isi_catatan: isi_catatan,
           },

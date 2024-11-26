@@ -42,7 +42,7 @@ const AdminPresensi = () => {
 
       // Ambil data profil user
       const userResponse = await axios.get(
-        "https://px973nrz-3000.asse.devtunnels.ms/users/show_profile",
+        "https://d09jsw8q-3000.asse.devtunnels.ms/users/show_profile",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,7 +87,7 @@ const AdminPresensi = () => {
       }
 
       const response = await axios.post(
-        "https://px973nrz-3000.asse.devtunnels.ms/flag_alowed/clokin_open",
+        "https://d09jsw8q-3000.asse.devtunnels.ms/flag_alowed/clokin_open",
         {
           allow_clockin: true, // Body request
         },
@@ -126,7 +126,7 @@ const AdminPresensi = () => {
       }
 
       const response = await axios.post(
-        "https://px973nrz-3000.asse.devtunnels.ms/flag_alowed/update_close",
+        "https://d09jsw8q-3000.asse.devtunnels.ms/flag_alowed/update_close",
         {
           allowClockout: true, // Body request
         },
