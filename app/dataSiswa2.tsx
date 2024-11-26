@@ -32,7 +32,7 @@ const DataKelas = () => {
       }
 
       axios
-        .get("https://px973nrz-3000.asse.devtunnels.ms/users/showAll_profile", {
+        .get("https://d09jsw8q-3000.asse.devtunnels.ms/users/showAll_profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

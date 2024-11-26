@@ -36,7 +36,7 @@ const PresensiMasuk = () => {
         return;
       }
       axios
-        .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+        .get("https://d09jsw8q-3000.asse.devtunnels.ms/users/show_profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -83,7 +83,7 @@ const PresensiMasuk = () => {
       const leaveStatus = is_leave !== null ? is_leave : 0;
       axios
         .post(
-          "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/",
+          "https://d09jsw8q-3000.asse.devtunnels.ms/flag_alowed/clokin_open",
           {
             is_leave: leaveStatus,
             latitude,

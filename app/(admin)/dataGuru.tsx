@@ -37,7 +37,7 @@ const DataGuru = () => {
       return;
     }
     axios
-      .get("https://px973nrz-3000.asse.devtunnels.ms/users/show_profile", {
+      .get("https://d09jsw8q-3000.asse.devtunnels.ms/users/show_profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
