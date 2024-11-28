@@ -40,7 +40,7 @@ const RekapData = () => {
       return;
     }
     axios
-      .get("https://px973nrz-3000.asse.devtunnels.ms/attendance/info_rekap", {
+      .get("https://t6c2snf7-3000.asse.devtunnels.ms/attendance/info_rekap", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -87,7 +87,7 @@ const RekapData = () => {
 
       // Make the API request with the Authorization header
       const response = await axios.get(
-        "https://px973nrz-3000.asse.devtunnels.ms/attendance/rekap_absensi",
+        "https://t6c2snf7-3000.asse.devtunnels.ms/attendance/rekap_absensi",
         {
           headers: {
             Authorization: `Bearer ${token}`,

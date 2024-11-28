@@ -45,7 +45,7 @@ const JadwalPelajaran = () => {
     }
     axios
       .get(
-        "https://px973nrz-3000.asse.devtunnels.ms/jadwal_kelas/show_jadwal",
+        "https://t6c2snf7-3000.asse.devtunnels.ms/jadwal_kelas/show_jadwal",
         {
           headers: {
             Authorization: `Bearer ${token}`,

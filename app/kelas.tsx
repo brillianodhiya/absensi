@@ -23,7 +23,7 @@ const DataKelas = () => {
       return;
     }
     axios
-      .get("https://px973nrz-3000.asse.devtunnels.ms/master_kelas/show_kelas", {
+      .get("https://t6c2snf7-3000.asse.devtunnels.ms/master_kelas/show_kelas", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
