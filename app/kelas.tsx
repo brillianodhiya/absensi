@@ -24,6 +24,7 @@ const DataKelas = () => {
     }
     axios
       .get("https://t6c2snf7-3000.asse.devtunnels.ms/master_kelas/show_kelas", {
+
         headers: {
           Authorization: `Bearer ${token}`,
         },

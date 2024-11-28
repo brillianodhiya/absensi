@@ -43,6 +43,7 @@ const AdminPresensi = () => {
       // Ambil data profil user
       const userResponse = await axios.get(
         "https://t6c2snf7-3000.asse.devtunnels.ms/users/show_profile",
+
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -88,6 +89,7 @@ const AdminPresensi = () => {
 
       const response = await axios.post(
         "https://t6c2snf7-3000.asse.devtunnels.ms/flag_alowed/clokin_open",
+
         {
           allow_clockin: true, // Body request
         },
@@ -127,6 +129,7 @@ const AdminPresensi = () => {
 
       const response = await axios.post(
         "https://t6c2snf7-3000.asse.devtunnels.ms/flag_alowed/update_close",
+
         {
           allowClockout: true, // Body request
         },
