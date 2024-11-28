@@ -42,7 +42,8 @@ const AdminPresensi = () => {
 
       // Ambil data profil user
       const userResponse = await axios.get(
-        "https://d09jsw8q-3000.asse.devtunnels.ms/users/show_profile",
+        "https://t6c2snf7-3000.asse.devtunnels.ms/users/show_profile",
+
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,7 +58,7 @@ const AdminPresensi = () => {
 
       // Ambil status absensi untuk kelas
       const statusResponse = await axios.get(
-        "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/check-status", // Endpoint untuk cek status absensi
+        "https://t6c2snf7-3000.asse.devtunnels.ms/attendance/check-status", // Endpoint untuk cek status absensi
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,7 +88,8 @@ const AdminPresensi = () => {
       }
 
       const response = await axios.post(
-        "https://d09jsw8q-3000.asse.devtunnels.ms/flag_alowed/clokin_open",
+        "https://t6c2snf7-3000.asse.devtunnels.ms/flag_alowed/clokin_open",
+
         {
           allow_clockin: true, // Body request
         },
@@ -126,7 +128,8 @@ const AdminPresensi = () => {
       }
 
       const response = await axios.post(
-        "https://d09jsw8q-3000.asse.devtunnels.ms/flag_alowed/update_close",
+        "https://t6c2snf7-3000.asse.devtunnels.ms/flag_alowed/update_close",
+
         {
           allowClockout: true, // Body request
         },

@@ -30,6 +30,7 @@ const catatan = () => {
   const [presensiPulangActive, setPresensiPulangActive] = useState(false);
   const checkPresensiStatus = async () => {
     try {
+      console.log("triggered");
       const token = await AsyncStorage.getItem("token");
 
       if (!token) {
@@ -38,7 +39,7 @@ const catatan = () => {
       }
 
       const response = await axios.get(
-        "https://d09jsw8q-3000.asse.devtunnels.ms/attendance/check-status",
+        "https://t6c2snf7-3000.asse.devtunnels.ms/attendance/check-status",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -64,7 +65,8 @@ const catatan = () => {
 
       // Ambil data user dan status presensi pulang dari server
       axios
-        .get("https://d09jsw8q-3000.asse.devtunnels.ms/catatan/info_catatan", {
+        .get("https://t6c2snf7-3000.asse.devtunnels.ms/catatan/info_catatan", {
+
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -100,7 +102,8 @@ const catatan = () => {
 
       axios
         .post(
-          "https://d09jsw8q-3000.asse.devtunnels.ms/catatan/make_catatan",
+          "https://t6c2snf7-3000.asse.devtunnels.ms/catatan/make_catatan",
+
           {
             isi_catatan: isi_catatan,
           },
