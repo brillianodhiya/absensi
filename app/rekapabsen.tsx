@@ -41,7 +41,6 @@ const RekapData = () => {
     }
     axios
       .get("https://t6c2snf7-3000.asse.devtunnels.ms/attendance/info_rekap", {
-
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -38,7 +38,6 @@ const DataSiswa = () => {
     axios
 
       .get("https://t6c2snf7-3000.asse.devtunnels.ms/users/show_profile", {
-
         headers: {
           Authorization: `Bearer ${token}`,
         },

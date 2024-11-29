@@ -16,6 +16,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { getDistance } from "geolib";
 
 const PresensiMasuk = () => {
   const [userData, setUserData] = useState({
@@ -58,12 +59,25 @@ const PresensiMasuk = () => {
     }
   };
 
+  const ALLOWED_LOCATION = {
+    latitude: -8.0561, // Ganti dengan latitude lokasi yang Anda inginkan
+    longitude: 111.7136, // Ganti dengan longitude lokasi yang Anda inginkan
+  };
+
   const masuk = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         setError("Token not found. Please login.");
         setLoading(false);
+        return;
+      }
+
+      // Pastikan tombol "Hadir" dipilih
+      if (is_leave !== 1) {
+        console.log("Location validation skipped for non-Hadir status.");
+        // Lanjutkan proses presensi tanpa validasi lokasi
+        await submitAttendance(token, 0, null, null); // is_leave selain 1, tanpa koordinat
         return;
       }
 
@@ -79,36 +93,60 @@ const PresensiMasuk = () => {
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
 
-      // Send location data along with leave status
-      const leaveStatus = is_leave !== null ? is_leave : 0;
-      axios
-        .post(
-          "https://t6c2snf7-3000.asse.devtunnels.ms/attendance/clockin",
+      // Validasi jarak ke lokasi yang diperbolehkan
+      const distance = getDistance({ latitude, longitude }, ALLOWED_LOCATION);
 
-          {
-            is_leave: leaveStatus,
-            latitude,
-            longitude,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log("Note added successfully:");
-          setLoading(false);
-          router.push("/(tabs)/home");
-        })
-        .catch((error) => {
-          console.error("Error adding note:", error);
-          setError("Failed to add note.");
-          setLoading(false);
-        });
+      if (distance > 100) {
+        Alert.alert(
+          "Outside Allowed Zone",
+          "You are not within 100 meters of the allowed location."
+        );
+        setLoading(false);
+        return;
+      }
+
+      // Lanjutkan presensi jika dalam radius
+      await submitAttendance(token, is_leave, latitude, longitude);
     } catch (error) {
-      console.log(error);
+      console.error("Error in attendance process:", error);
       setError("An unexpected error occurred.");
+      setLoading(false);
+    }
+  };
+
+  // Fungsi untuk mengirim data presensi
+  const submitAttendance = async (
+    token: string, // Token tipe string
+    isLeave: 0 | 1 | 2 | 3, // Nilai isLeave hanya dapat berupa 0, 1, 2, atau 3
+    latitude?: number | null, // Koordinat latitude opsional bertipe number
+    longitude?: number | null // Koordinat longitude opsional bertipe number
+  ) => {
+    try {
+      const payload: {
+        is_leave: 0 | 1 | 2 | 3;
+        latitude?: number | null;
+        longitude?: number | null;
+      } = {
+        is_leave: isLeave,
+        ...(latitude && longitude && { latitude, longitude }),
+      };
+
+      await axios.post(
+        "https://t6c2snf7-3000.asse.devtunnels.ms/attendance/clockin",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Attendance submitted successfully.");
+      setLoading(false);
+      router.push("/(tabs)/home");
+    } catch (error) {
+      console.error("Error submitting attendance:", error);
+      setError("Failed to submit attendance.");
       setLoading(false);
     }
   };
