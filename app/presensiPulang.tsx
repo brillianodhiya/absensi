@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
@@ -14,6 +15,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location"; // Import expo-location
 import Header from "@/components/Header";
+import { getDistance } from "geolib";
 
 const { width, height } = Dimensions.get("window");
 
@@ -56,6 +58,11 @@ const PresensiPulang = () => {
     }
   };
 
+  const ALLOWED_LOCATION = {
+    latitude: -8.0561, // Ganti dengan latitude lokasi yang Anda inginkan
+    longitude: 111.7136, // Ganti dengan longitude lokasi yang Anda inginkan
+  };
+
   const pulang = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -65,38 +72,80 @@ const PresensiPulang = () => {
         return;
       }
 
-      // Meminta izin lokasi dari pengguna
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setError("Permission to access location was denied");
+      // Pastikan tombol "Hadir" dipilih
+      if (is_leave !== 1) {
+        console.log("Location validation skipped for non-Hadir status.");
+        // Lanjutkan proses presensi tanpa validasi lokasi
+        await submitAttendance(token, 0, null, null); // is_leave selain 1, tanpa koordinat
         return;
       }
 
-      // Mengambil posisi saat ini
+      // Request location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission Denied", "Location permission is required.");
+        setLoading(false);
+        return;
+      }
+
+      // Get the current location
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
 
-      // Mengirim permintaan ke server dengan data lokasi
-      const leaveStatus = is_leave !== null ? is_leave : 0;
-      axios
-        .post(
-          "https://t6c2snf7-3000.asse.devtunnels.ms/attendance/clockout",
-          { is_leave: leaveStatus, latitude, longitude },
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
-        .then((response) => {
-          console.log("Clock-out successful");
-          setLoading(false);
-          router.push("/(tabs)/home");
-        })
-        .catch((error) => {
-          console.error("Error during clock-out:", error);
-          setError("Failed to clock out.");
-          setLoading(false);
-        });
+      // Validasi jarak ke lokasi yang diperbolehkan
+      const distance = getDistance({ latitude, longitude }, ALLOWED_LOCATION);
+
+      if (distance > 100) {
+        Alert.alert(
+          "Outside Allowed Zone",
+          "You are not within 100 meters of the allowed location."
+        );
+        setLoading(false);
+        return;
+      }
+
+      // Lanjutkan presensi jika dalam radius
+      await submitAttendance(token, is_leave, latitude, longitude);
     } catch (error) {
-      console.log(error);
+      console.error("Error in attendance process:", error);
       setError("An unexpected error occurred.");
+      setLoading(false);
+    }
+  };
+
+  // Fungsi untuk mengirim data presensi
+  const submitAttendance = async (
+    token: string, // Token tipe string
+    isLeave: 0 | 1 | 2 | 3, // Nilai isLeave hanya dapat berupa 0, 1, 2, atau 3
+    latitude?: number | null, // Koordinat latitude opsional bertipe number
+    longitude?: number | null // Koordinat longitude opsional bertipe number
+  ) => {
+    try {
+      const payload: {
+        is_leave: 0 | 1 | 2 | 3;
+        latitude?: number | null;
+        longitude?: number | null;
+      } = {
+        is_leave: isLeave,
+        ...(latitude && longitude && { latitude, longitude }),
+      };
+
+      await axios.post(
+        "https://t6c2snf7-3000.asse.devtunnels.ms/attendance/update_close",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Attendance submitted successfully.");
+      setLoading(false);
+      router.push("/(tabs)/home");
+    } catch (error) {
+      console.error("Error submitting attendance:", error);
+      setError("Failed to submit attendance.");
       setLoading(false);
     }
   };
